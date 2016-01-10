@@ -1,0 +1,26 @@
+<h2>Listing rooms</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for room <- @rooms do %>
+    <tr>
+      <td><%= room.name %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: room_path(@conn, :show, room), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: room_path(@conn, :edit, room), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: room_path(@conn, :delete, room), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New room", to: room_path(@conn, :new) %>
