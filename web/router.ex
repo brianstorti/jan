@@ -16,7 +16,7 @@ defmodule Jan.Router do
   scope "/", Jan do
     pipe_through :browser # Use the default browser stack
 
-    get "/", PageController, :index
+    get "/", RoomController, :new
     resources "rooms", RoomController
   end
 

@@ -12,8 +12,9 @@ defmodule Jan.RoomControllerTest do
 
   test "creates resource and redirects when data is valid", %{conn: conn} do
     conn = post conn, room_path(conn, :create), room: @valid_attrs
-    assert redirected_to(conn) == room_path(conn, :index)
-    assert Repo.get_by(Room, @valid_attrs)
+    room = Repo.get_by(Room, @valid_attrs)
+    assert room
+    assert redirected_to(conn) == room_path(conn, :show, room)
   end
 
   test "does not create resource and renders errors when data is invalid", %{conn: conn} do
