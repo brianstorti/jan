@@ -1,11 +1,19 @@
-<div id="rooms">
-  <h2>Room <%= @room.name %> </h2>
-  <input type="hidden" id="room-name" value="<%= @room.name %>" />
+<h2>Room <%= @room.name %> </h2>
+<input type="hidden" id="room-name" value="<%= @room.name %>" />
 
-  <div class="button1">
+<form method="post" id="join-room-form">
+  <input id="player-name" />
+  <input type="submit" value"Join" />
+</form>
+
+<div class="players">
+</div>
+
+<div class="game">
+  <button class="button1">
     click me
-  </div>
+  </button>
 
-  <div class="moves_container">
-  </div>
+  <ul class="moves_container">
+  </ul>
 </div>
