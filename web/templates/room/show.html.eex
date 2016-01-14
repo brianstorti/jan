@@ -9,17 +9,10 @@
 <div class="game" style="display:none">
   <h1>Players</h1>
 
+  <button data-move="rock">Rock</button>
+  <button data-move="paper">Paper</button>
+  <button data-move="scissors">Scissors</button>
+
   <ul class="players">
-  </ul>
-
-  <button class="button1">
-    click me
-  </button>
-
-  <button class="leave">
-    leave
-  </button>
-
-  <ul class="moves_container">
   </ul>
 </div>

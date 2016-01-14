@@ -11,7 +11,7 @@ defmodule Jan.RoomChannel do
 
     Jan.GameServer.add_player(pid, player_name)
 
-    send self, :new_player_joined
+    send self, :players_changed
     {:ok, socket}
   end
 
@@ -20,17 +20,18 @@ defmodule Jan.RoomChannel do
     {:ok, socket}
   end
 
-  def handle_info(:new_player_joined, socket) do
-    IO.inspect "new_player_joined"
+  def handle_info(:players_changed, socket) do
+    IO.inspect "players_changed"
     players = Jan.GameServer.get_players_list(socket.assigns.pid)
-    broadcast! socket, "new_player_joined", %{players: players}
+    broadcast! socket, "players_changed", %{players: players}
     {:noreply, socket}
   end
 
-  def handle_in("new_move", %{"body" => body}, socket) do
+  def handle_in("new_move", %{"move" => move}, socket) do
     # broadcast!/3 will notify all joined clients on this socket's topic and
     # invoke their handle_out/3 callbacks
-    broadcast! socket, "new_move", %{"body" => body}
+    IO.inspect "#{socket.assigns.player_name} chooses #{move}"
+    # broadcast! socket, "new_move", %{"body" => body}
     {:noreply, socket}
   end
 
@@ -39,7 +40,7 @@ defmodule Jan.RoomChannel do
     player_name = socket.assigns.player_name
 
     Jan.GameServer.remove_player(pid, player_name)
-    broadcast! socket, "new_player_joined", %{players: Jan.GameServer.get_players_list(pid)}
+    broadcast! socket, "players_changed", %{players: Jan.GameServer.get_players_list(pid)}
 
     {:stop, :normal, :ok, socket}
   end

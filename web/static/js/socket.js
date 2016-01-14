@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', function() {
     event.preventDefault();
     init();
   });
-
 });
 
 let init = function() {
@@ -20,13 +19,9 @@ let init = function() {
   channel.join().receive("ok", handleSuccessfulJoin)
                 .receive("error", handleFailedJoin)
 
-  $('.button1').on("click", event => {
-    channel.push("new_move", { body: "foo" })
+  $("[data-move]").on("click", function (e) {
+    channel.push("new_move", { move: $(e.target).data('move') });
   });
-
-  $('.leave').on('click', e => {
-    leave(channel);
-  })
 
   window.onbeforeunload = function () {
     leave(channel);
@@ -36,7 +31,7 @@ let init = function() {
     $('.moves_container').append("<li>Foo</li>")
   })
 
-  channel.on("new_player_joined", payload => {
+  channel.on("players_changed", payload => {
     let players = payload.players.map(player => { return `<li>${player}</li>` })
     $('.players').html(players)
   })
