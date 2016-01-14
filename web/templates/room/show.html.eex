@@ -16,6 +16,10 @@
     click me
   </button>
 
+  <button class="leave">
+    leave
+  </button>
+
   <ul class="moves_container">
   </ul>
 </div>

@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     event.preventDefault();
     init();
   });
+
 });
 
 let init = function() {
@@ -22,6 +23,14 @@ let init = function() {
   $('.button1').on("click", event => {
     channel.push("new_move", { body: "foo" })
   });
+
+  $('.leave').on('click', e => {
+    leave(channel);
+  })
+
+  window.onbeforeunload = function () {
+    leave(channel);
+  }
 
   channel.on("new_move", payload => {
     $('.moves_container').append("<li>Foo</li>")
@@ -43,5 +52,10 @@ let handleFailedJoin = function(response) {
   console.log("Unable to join", response);
 }
 
+let leave = function (channel) {
+  channel.push("leave");
+  $('.game').hide();
+  $('#join-room-form').show();
+}
 
 export default socket
