@@ -6,10 +6,12 @@
   <input type="submit" value"Join" />
 </form>
 
-<div class="players">
-</div>
+<div class="game" style="display:none">
+  <h1>Players</h1>
 
-<div class="game">
+  <ul class="players">
+  </ul>
+
   <button class="button1">
     click me
   </button>

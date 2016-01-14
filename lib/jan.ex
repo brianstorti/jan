@@ -11,8 +11,7 @@ defmodule Jan do
       supervisor(Jan.Endpoint, []),
       # Start the Ecto repository
       supervisor(Jan.Repo, []),
-      # Here you could define other workers and supervisors as children
-      # worker(Jan.Worker, [arg1, arg2, arg3]),
+      worker(Jan.Registry, []),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
