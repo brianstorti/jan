@@ -32,8 +32,14 @@ let init = function() {
   })
 
   channel.on("players_changed", payload => {
+    console.log("payload.players", payload.players);
+
     let players = payload.players.map(player => { return `<li>${player}</li>` })
     $('.players').html(players)
+  })
+
+  channel.on("winner_found", payload => {
+    $('.game').append(`<p>${payload.player_name} won!</p>`)
   })
 }
 
