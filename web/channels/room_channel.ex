@@ -23,19 +23,20 @@ defmodule Jan.RoomChannel do
   end
 
   def handle_in("new_move", %{"move" => move}, socket) do
-    IO.inspect "#{socket.assigns.player_name} chooses #{move}"
     pid = socket.assigns.pid
     player_name = socket.assigns.player_name
 
     case Jan.GameServer.new_move(pid, player_name, move) do
       :continue ->
         send self, :players_changed
-        IO.inspect "continue"
+
+      :draw ->
+        broadcast! socket, "draw", %{}
+        send self, :players_changed
 
       winner ->
         send self, :players_changed
-        broadcast! socket, "winner_found", %{"player_name" => player_name}
-        IO.inspect "winner found!"
+        broadcast! socket, "winner_found", %{"player_name" => winner.name}
     end
 
     {:noreply, socket}

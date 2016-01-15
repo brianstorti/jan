@@ -18,7 +18,7 @@ defmodule Jan.GameServer do
   def new_move(pid, player_name, move) do
     case GenServer.call(pid, {:new_move, player_name, move}) do
       {:winner, winner} -> winner
-      _ -> :continue
+      other_result -> other_result
     end
   end
 
@@ -54,15 +54,25 @@ defmodule Jan.GameServer do
     {:reply, answer_for(new_state), new_state}
   end
 
-  #[{name: "Foo", move: "rock"},
-  # {name: "Bar", move: "paper"}]
   defp answer_for(players) do
     all_players_moved = players |> Enum.map(&(&1.move)) |> Enum.all?
 
     if all_players_moved do
-      {:winner, List.first(players)}
+      find_winner(players)
     else
       :continue
+    end
+  end
+
+  defp find_winner(players) do
+    p1 = List.first(players)
+    p2 = List.last(players)
+    this_beat_that = %{"rock" => "scissors", "paper" => "rock", "scissors" => "paper"}
+
+    cond do
+      Map.get(this_beat_that, p1.move) == p2.move -> {:winner, p1}
+      Map.get(this_beat_that, p2.move) == p1.move -> {:winner, p2}
+      true -> :draw
     end
   end
 end

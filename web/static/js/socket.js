@@ -33,7 +33,11 @@ let init = function() {
   });
 
   channel.on("winner_found", payload => {
-    $('.game').append(`<p>${payload.player_name} won!</p>`);
+    $('.result').html(`<p>${payload.player_name} won!</p>`);
+  });
+
+  channel.on("draw", payload => {
+    $('.result').html(`<p>It's a draw!</p>`);
   });
 };
 
