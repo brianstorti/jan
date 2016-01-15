@@ -23,7 +23,6 @@ defmodule Jan.RoomController do
   end
 
   def show(conn, %{"id" => id}) do
-    room = Repo.get!(Room, id)
-    render(conn, "show.html", room: room)
+    render(conn, "show.html", room: id)
   end
 end

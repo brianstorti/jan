@@ -1,18 +1,23 @@
-<h2>Room <%= @room.name %> </h2>
-<input type="hidden" id="room-name" value="<%= @room.name %>" />
+<input type="hidden" id="room-name" value="<%= @room %>" />
 
 <form method="post" id="join-room-form">
-  <input id="player-name" />
+  <input id="player-name" autofocus="autofocus" />
   <input type="submit" value"Join" />
 </form>
 
 <div class="game" style="display:none">
-  <h1>Players</h1>
+  <div style="text-align:center">
+    <h1>Choose your weapon</h1>
 
-  <button data-move="rock">Rock</button>
-  <button data-move="paper">Paper</button>
-  <button data-move="scissors">Scissors</button>
+    <button data-move="rock">Rock</button>
+    <button data-move="paper">Paper</button>
+    <button data-move="scissors">Scissors</button>
+  </div>
 
-  <ul class="players">
-  </ul>
+  <br />
+  <br />
+  <br />
+
+  <div class="players">
+  </div>
 </div>

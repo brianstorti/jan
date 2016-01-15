@@ -23,7 +23,7 @@ defmodule Jan.GameServer do
   end
 
   def get_players_list(pid) do
-    Enum.map(GenServer.call(pid, :players_list), &(&1.name))
+    GenServer.call(pid, :players_list)
   end
 
   def init(_) do
@@ -31,11 +31,11 @@ defmodule Jan.GameServer do
   end
 
   def handle_cast({:add_player, player_name}, state) do
-    {:noreply, [%Player{name: player_name} | state]}
+    {:noreply, [%{name: player_name, move: nil} | state]}
   end
 
   def handle_cast({:remove_player, player_name}, state) do
-    {:noreply, Enum.filter(state, &(&1.name == player_name))}
+    {:noreply, Enum.filter(state, &(&1.name != player_name))}
   end
 
   def handle_call(:players_list, _from, state) do
@@ -51,15 +51,15 @@ defmodule Jan.GameServer do
       player
     end)
 
-    {:reply, find_winner(new_state), new_state}
+    {:reply, answer_for(new_state), new_state}
   end
 
   #[{name: "Foo", move: "rock"},
   # {name: "Bar", move: "paper"}]
-  defp find_winner(players) do
-    found = players |> Enum.map(&(&1.move)) |> Enum.all?
+  defp answer_for(players) do
+    all_players_moved = players |> Enum.map(&(&1.move)) |> Enum.all?
 
-    if found do
+    if all_players_moved do
       {:winner, List.first(players)}
     else
       :continue

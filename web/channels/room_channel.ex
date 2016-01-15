@@ -15,15 +15,10 @@ defmodule Jan.RoomChannel do
     {:ok, socket}
   end
 
-  def terminate(socket, topic) do
-    IO.inspect "LEAVING"
-    {:ok, socket}
-  end
-
   def handle_info(:players_changed, socket) do
-    IO.inspect "players_changed"
     players = Jan.GameServer.get_players_list(socket.assigns.pid)
     broadcast! socket, "players_changed", %{players: players}
+
     {:noreply, socket}
   end
 
@@ -34,10 +29,11 @@ defmodule Jan.RoomChannel do
 
     case Jan.GameServer.new_move(pid, player_name, move) do
       :continue ->
-        broadcast! socket, "new_move", %{"player_name" => player_name}
+        send self, :players_changed
         IO.inspect "continue"
 
       winner ->
+        send self, :players_changed
         broadcast! socket, "winner_found", %{"player_name" => player_name}
         IO.inspect "winner found!"
     end
