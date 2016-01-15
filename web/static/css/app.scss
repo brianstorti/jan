@@ -1,0 +1,89 @@
+@mixin prefix($property, $value) {
+  -webkit-#{$property}: #{$value};
+  -ms-#{$property}: #{$value};
+  -moz-#{$property}: #{$value};
+  -o-#{$property}: #{$value};
+  #{$property}: #{$value};
+}
+@mixin keyframes($name) {
+  @-webkit-keyframes #{$name} { @content; }
+  @-moz-keyframes #{$name} { @content; }
+  @-o-keyframes #{$name} { @content; }
+  @keyframes #{$name} { @content; }
+}
+
+@include keyframes(fadeIn) {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+$background-color: rgb(245,245,245);
+$body-color: rgb(225,225,225);
+$header-font-color: rgb(33,153,232);
+
+#player-name {
+  font-size: 10em;
+  width: 100%;
+  text-align: center;
+  outline: none;
+  color: gray;
+}
+
+.name {
+  position: absolute;
+  top: 35%;
+  transform: translateY(-50%);
+  width: 100%;
+}
+
+.game {
+  display: none;
+  text-align: center;
+  max-width: 600px;
+
+  h1 {
+    color: gray;
+    margin: 30px;
+    font-weight: bold;
+  }
+}
+
+.weapon-wrapper {
+  text-align: center;
+  font-weight: bold;
+  // max-width: 150px;
+  padding-top: 15px;
+  display: block;
+  color: rgb(120, 120, 120);
+  background-color: $background-color;
+  border-radius: 5%;
+  @include prefix(box-shadow, 2px 2px 3px gray);
+  @include prefix(animation, fadeIn .5s);
+
+  &.-disabled, &.-disabled:hover , &.-disabled:active {
+    cursor: default;
+    color: rgb(120, 120, 120);
+    background-color: darken($background-color, 5%);
+    @include prefix(box-shadow, none);
+  }
+
+  &:hover {
+    @include prefix(box-shadow, 1px 1px 2px gray);
+  }
+
+  &:active {
+    @include prefix(box-shadow, inset 2px 2px 3px gray);
+    background-color: darken($background-color, 15%);
+  }
+
+  .result-box &:active {
+    background-color: $background-color;
+    @include prefix(box-shadow, 2px 2px 3px gray);
+  }
+
+  .result-box &:hover {
+    color: rgb(120, 120, 120);
+    @include prefix(box-shadow, 2px 2px 3px gray);
+    cursor: default;
+  }
+}

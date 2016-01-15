@@ -1,27 +1,48 @@
 <input type="hidden" id="room-name" value="<%= @room %>" />
 
-<form method="post" id="join-room-form">
-  <input id="player-name" autofocus="autofocus" />
-  <input type="submit" value"Join" />
-</form>
+<div class="name">
+  <form method="post" id="join-room-form">
+    <input id="player-name" autofocus="autofocus" placeholder="Enter your name" />
+  </form>
+</div>
 
-<div class="game" style="display:none">
-  <div style="text-align:center">
-    <h1>Choose your weapon</h1>
+<div class="row game">
+  <h1>Choose your weapon</h1>
 
-    <button data-move="rock">Rock</button>
-    <button data-move="paper">Paper</button>
-    <button data-move="scissors">Scissors</button>
+  <div class="row">
+    <div class="large-4 medium-4 columns">
+      <a data-move="rock" class="weapon-wrapper">
+        <i class="weapon fa fa-5x fa-hand-rock-o"></i>
+        <p class="weapon-label">Rock</p>
+      </a>
+    </div>
+
+    <div class="large-4 medium-4 columns">
+      <a data-move="paper" class="weapon-wrapper">
+        <i class="weapon fa fa-5x fa-hand-paper-o"></i>
+        <p class="weapon-label">Paper</p>
+      </a>
+    </div>
+
+    <div class="large-4 medium-4 columns">
+      <a data-move="scissors" class="weapon-wrapper">
+        <i class="weapon fa fa-5x fa-hand-scissors-o"></i>
+        <p class="weapon-label">Scissors</p>
+      </a>
+    </div>
   </div>
+
+  <hr />
 
   <br />
   <br />
   <br />
 
-  <div class="players">
+  <div class="row players">
   </div>
 
-  <div class="result">
+  <br />
+  <br />
 
-  </div>
+  <h1 class="result" />
 </div>

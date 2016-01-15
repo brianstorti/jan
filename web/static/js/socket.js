@@ -24,7 +24,7 @@ let init = function() {
   };
 
   $("[data-move]").on("click", function (e) {
-    channel.push("new_move", { move: $(e.target).data('move') });
+    channel.push("new_move", { move: $(e.currentTarget).data('move') });
   });
 
   channel.on("players_changed", payload => {
@@ -33,17 +33,17 @@ let init = function() {
   });
 
   channel.on("winner_found", payload => {
-    $('.result').html(`<p>${payload.player_name} won!</p>`);
+    $('.result').html(`${payload.player_name} won!`);
   });
 
   channel.on("draw", payload => {
-    $('.result').html(`<p>It's a draw!</p>`);
+    $('.result').html(`It's a draw!`);
   });
 };
 
 let handleSuccessfulJoin = function(response) {
   $('.game').show();
-  $('#join-room-form').hide();
+  $('.name').hide();
   console.log("Joined successfully", response);
 };
 
@@ -56,20 +56,29 @@ let leave = function (channel) {
 };
 
 let playerView = function (player) {
-  return `<div class="${player.name}">` +
-           '<div class="columns small-5">' +
-             `<span>${player.name}</span>` +
-             weaponView(player.move) +
-           '</div>' +
-         '</div>';
-}
+    return `<div class="player-${player.name} large-4 medium-4 columns">` +
+             weaponView(player) +
+           '</div>';
+};
 
-let weaponView = function (weapon) {
+let weaponView = function (player) {
+  console.log("player", player);
+
+  let weapon = player.move;
+  let name = player.name;
   if (weapon) {
-    return `<span>${weapon}</span>`;
+     return `<a data-move="${weapon}" class="weapon-wrapper -disabled">` +
+               `<p class="weapon-label">${name}</p>` +
+               `<i class="weapon fa fa-5x fa-hand-${weapon}-o"></i> ` +
+               `<p class="weapon-label">${weapon}</p>` +
+             '</a>';
   } else {
-    return `<span>?</span>`;
+     return '<a data-move="scissors" class="weapon-wrapper -disabled">' +
+               `<p class="weapon-label">${name}</p>` +
+               '<i class="weapon fa fa-5x fa-question"></i> ' +
+               '<p class="weapon-label">...</p>' +
+             '</a>';
   }
-}
+};
 
 export default socket;
