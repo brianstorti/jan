@@ -73,14 +73,20 @@ defmodule Jan.GameServer do
   end
 
   defp find_winner(players) do
-    p1 = List.first(players)
-    p2 = List.last(players)
-    this_beat_that = %{"rock" => "scissors", "paper" => "rock", "scissors" => "paper"}
+    is_winner = fn current -> beat_all?(current.move, List.delete(players, current)) end
+    winner = Enum.find(players, is_winner)
 
-    cond do
-      Map.get(this_beat_that, p1.move) == p2.move -> {:winner, p1}
-      Map.get(this_beat_that, p2.move) == p1.move -> {:winner, p2}
-      true -> :draw
+    if winner do
+      {:winner, winner}
+    else
+      :draw
     end
+  end
+
+  defp beat_all?(move, players) do
+    this_beat_that = %{"rock" => "scissors", "paper" => "rock", "scissors" => "paper"}
+    weapon_to_beat = Map.get(this_beat_that, move)
+
+    Enum.all?(players, &(&1.move == weapon_to_beat))
   end
 end

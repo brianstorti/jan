@@ -32,8 +32,8 @@ defmodule Jan.RoomChannel do
         send self, :players_changed
 
       {:winner, player} ->
-        send self, :players_changed
         broadcast! socket, "winner_found", %{"player_name" => player.name}
+        send self, :players_changed
 
       _ -> nil
     end
