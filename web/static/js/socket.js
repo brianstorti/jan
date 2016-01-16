@@ -3,9 +3,10 @@ import {Socket} from "phoenix";
 let socket = new Socket("/socket");
 
 document.addEventListener('DOMContentLoaded', function() {
-  $('#join-room-form').on("submit", event => {
-    event.preventDefault();
-    init();
+  $('#player-name').off("keypress").on("keypress", e => {
+    if (e.keyCode == 13) {
+      init();
+    }
   });
 });
 
@@ -33,6 +34,10 @@ let init = function() {
     channel.push("new_game");
   });
 
+  $('.new-message').off("keypress").on("keypress", e => {
+    if (e.keyCode == 13 && !e.shiftKey) sendNewMessage(channel);
+  });
+
   channel.on("players_changed", payload => {
     let players = payload.players.map(playerView);
     $('.players').html(players);
@@ -51,6 +56,10 @@ let init = function() {
   channel.on("reset", payload => {
     $('.result-wrapper').hide();
     $('.weapons.weapon-wrapper').removeClass('-disabled');
+  });
+
+  channel.on("new_message", payload => {
+    $('.messages').append(`<p><strong>${payload.player}:</strong> ${payload.message}</p>`);
   });
 };
 
@@ -88,6 +97,12 @@ let weaponView = function (playerName, weapon) {
                '<p class="weapon-label">...</p>' +
              '</a>';
   }
+};
+
+let sendNewMessage = function (channel) {
+  let message = $('.new-message').val();
+  $('.new-message').val('');
+  channel.push("new_message", { message: message });
 };
 
 export default socket;

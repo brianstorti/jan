@@ -1,9 +1,7 @@
 <input type="hidden" id="room-name" value="<%= @room %>" />
 
 <div class="name">
-  <form method="post" id="join-room-form">
-    <input id="player-name" autofocus="autofocus" placeholder="Enter your name" />
-  </form>
+  <input id="player-name" autofocus="autofocus" placeholder="Enter your name" />
 </div>
 
 <div class="row game">
@@ -47,5 +45,14 @@
    <div class="row result-wrapper">
      <h1 class="result"> </h1>
      <a id="new-game">New Game</a>
+   </div>
+
+   <div class="chat-container">
+     <div class="chat">
+       <div class="messages">
+       </div>
+
+         <textarea class="new-message" autofocus="autofocus"></textarea>
+     </div>
    </div>
 </div>

@@ -50,6 +50,11 @@ defmodule Jan.RoomChannel do
     {:noreply, socket}
   end
 
+  def handle_in("new_message", %{"message" => message}, socket) do
+    broadcast! socket, "new_message", %{message: message, player: socket.assigns.player_name}
+    {:noreply, socket}
+  end
+
   def handle_in("leave", _, socket) do
     pid = socket.assigns.pid
     player_name = socket.assigns.player_name

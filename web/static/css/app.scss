@@ -91,3 +91,34 @@ $header-font-color: rgb(33,153,232);
 .result-wrapper {
   display: none;
 }
+
+.chat-container {
+  font-size: 12px;
+  background-color: white;
+  min-width: 15em;
+  max-width: 15em;
+  height: 100%;
+  border-left: thick double gray;
+  text-align: left;
+  position: fixed;
+  top: 0em;
+  right: 0em;
+
+  .messages {
+    padding: 10px;
+  }
+
+  .chat {
+    height: 100%;
+  }
+
+  .new-message {
+    position: fixed;
+    bottom: 0em;
+    width: 100%;
+
+    .new-message {
+      width: 100%;
+    }
+  }
+}
