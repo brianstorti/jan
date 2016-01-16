@@ -24,7 +24,9 @@ let init = function() {
   };
 
   $("[data-move]").on("click", function (e) {
-    channel.push("new_move", { move: $(e.currentTarget).data('move') });
+    let weapon = $(e.currentTarget).data('move')
+    channel.push("new_move", { move: weapon});
+    $(`.player-${playerName}`).html(weaponView(playerName, weapon));
   });
 
   channel.on("players_changed", payload => {
@@ -57,24 +59,20 @@ let leave = function (channel) {
 
 let playerView = function (player) {
     return `<div class="player-${player.name} large-4 medium-4 columns">` +
-             weaponView(player) +
+             weaponView(player.name, player.move) +
            '</div>';
 };
 
-let weaponView = function (player) {
-  console.log("player", player);
-
-  let weapon = player.move;
-  let name = player.name;
+let weaponView = function (playerName, weapon) {
   if (weapon) {
      return `<a data-move="${weapon}" class="weapon-wrapper -disabled">` +
-               `<p class="weapon-label">${name}</p>` +
+               `<p class="weapon-label">${playerName}</p>` +
                `<i class="weapon fa fa-5x fa-hand-${weapon}-o"></i> ` +
                `<p class="weapon-label">${weapon}</p>` +
              '</a>';
   } else {
      return '<a data-move="scissors" class="weapon-wrapper -disabled">' +
-               `<p class="weapon-label">${name}</p>` +
+               `<p class="weapon-label">${playerName}</p>` +
                '<i class="weapon fa fa-5x fa-question"></i> ' +
                '<p class="weapon-label">...</p>' +
              '</a>';

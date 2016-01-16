@@ -17,7 +17,7 @@ defmodule Jan.GameServer do
 
   def new_move(pid, player_name, move) do
     case GenServer.call(pid, {:new_move, player_name, move}) do
-      {:winner, winner} -> winner
+      {:winner, winner} -> {:winner, winner}
       other_result -> other_result
     end
   end

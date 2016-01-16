@@ -27,16 +27,15 @@ defmodule Jan.RoomChannel do
     player_name = socket.assigns.player_name
 
     case Jan.GameServer.new_move(pid, player_name, move) do
-      :continue ->
-        send self, :players_changed
-
       :draw ->
         broadcast! socket, "draw", %{}
         send self, :players_changed
 
-      winner ->
+      {:winner, player} ->
         send self, :players_changed
-        broadcast! socket, "winner_found", %{"player_name" => winner.name}
+        broadcast! socket, "winner_found", %{"player_name" => player.name}
+
+      _ -> nil
     end
 
     {:noreply, socket}
