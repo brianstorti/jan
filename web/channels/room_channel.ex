@@ -41,6 +41,15 @@ defmodule Jan.RoomChannel do
     {:noreply, socket}
   end
 
+  def handle_in("new_game", _, socket) do
+    Jan.GameServer.reset_game(socket.assigns.pid)
+    send self, :players_changed
+
+    broadcast! socket, "reset", %{}
+
+    {:noreply, socket}
+  end
+
   def handle_in("leave", _, socket) do
     pid = socket.assigns.pid
     player_name = socket.assigns.player_name

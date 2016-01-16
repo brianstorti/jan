@@ -29,17 +29,28 @@ let init = function() {
     $(`.player-${playerName}`).html(weaponView(playerName, weapon));
   });
 
+  $("#new-game").on("click", function (e) {
+    channel.push("new_game");
+  });
+
   channel.on("players_changed", payload => {
     let players = payload.players.map(playerView);
     $('.players').html(players);
   });
 
   channel.on("winner_found", payload => {
+    $('.result-wrapper').show();
     $('.result').html(`${payload.player_name} won!`);
   });
 
   channel.on("draw", payload => {
+    $('.result-wrapper').show();
     $('.result').html(`It's a draw!`);
+  });
+
+  channel.on("reset", payload => {
+    $('.result-wrapper').hide();
+    $('.weapons.weapon-wrapper').removeClass('-disabled');
   });
 };
 

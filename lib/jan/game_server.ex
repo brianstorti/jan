@@ -22,6 +22,10 @@ defmodule Jan.GameServer do
     end
   end
 
+  def reset_game(pid) do
+    GenServer.cast(pid, :reset_game)
+  end
+
   def get_players_list(pid) do
     GenServer.call(pid, :players_list)
   end
@@ -52,6 +56,10 @@ defmodule Jan.GameServer do
     end)
 
     {:reply, answer_for(new_state), new_state}
+  end
+
+  def handle_cast(:reset_game, state) do
+    {:noreply, Enum.map(state, &(%{&1 | move: nil}))}
   end
 
   defp answer_for(players) do

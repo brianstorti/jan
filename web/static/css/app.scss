@@ -22,7 +22,7 @@ $body-color: rgb(225,225,225);
 $header-font-color: rgb(33,153,232);
 
 #player-name {
-  font-size: 10em;
+  font-size: 8vw;
   width: 100%;
   text-align: center;
   outline: none;
@@ -86,4 +86,8 @@ $header-font-color: rgb(33,153,232);
     @include prefix(box-shadow, 2px 2px 3px gray);
     cursor: default;
   }
+}
+
+.result-wrapper {
+  display: none;
 }

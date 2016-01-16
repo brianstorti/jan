@@ -9,7 +9,7 @@
 <div class="row game">
   <h1>Choose your weapon</h1>
 
-  <div class="row">
+  <div class="row weapons">
     <div class="large-4 medium-4 columns">
       <a data-move="rock" class="weapon-wrapper">
         <i class="weapon fa fa-5x fa-hand-rock-o"></i>
@@ -44,5 +44,8 @@
   <br />
   <br />
 
-  <h1 class="result" />
+   <div class="row result-wrapper">
+     <h1 class="result"> </h1>
+     <a id="new-game">New Game</a>
+   </div>
 </div>
