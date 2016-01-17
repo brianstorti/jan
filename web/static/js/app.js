@@ -19,3 +19,10 @@ import "phoenix_html"
 // paths "./socket" or full ones "web/static/js/socket".
 
 import socket from "./socket"
+
+$('.room-name').off("keypress").on("keypress", e => {
+  if (e.keyCode == 13) {
+    let roomName = $('.room-name').val();
+    window.location = `/${roomName}`;
+  }
+});

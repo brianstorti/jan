@@ -21,7 +21,7 @@ $background-color: rgb(245,245,245);
 $body-color: rgb(225,225,225);
 $header-font-color: rgb(33,153,232);
 
-#player-name {
+#player-name, .room-name {
   font-size: 8vw;
   width: 100%;
   text-align: center;
