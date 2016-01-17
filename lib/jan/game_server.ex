@@ -4,7 +4,7 @@ defmodule Jan.GameServer do
   alias Jan.Player
 
   def start_link do
-    GenServer.start_link(__MODULE__, nil, name: :game_server)
+    GenServer.start_link(__MODULE__, [], name: :game_server)
   end
 
   def add_player(pid, player_name) do
