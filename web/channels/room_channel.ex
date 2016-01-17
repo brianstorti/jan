@@ -1,9 +1,8 @@
 defmodule Jan.RoomChannel do
   use Phoenix.Channel
 
-  def join("rooms:" <> room_id, params, socket) do
+  def join("rooms:" <> room_id, %{"player_name" => player_name}, socket) do
     pid = Jan.Registry.where_is(room_id)
-    player_name = Map.get(params, "player_name")
 
     socket = socket
               |> assign(:pid, pid)
