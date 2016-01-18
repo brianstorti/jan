@@ -63,7 +63,6 @@ $header-font-color: rgb(33,153,232);
 .weapon-wrapper {
   text-align: center;
   font-weight: bold;
-  // max-width: 150px;
   padding-top: 15px;
   display: block;
   color: rgb(120, 120, 120);
@@ -72,7 +71,7 @@ $header-font-color: rgb(33,153,232);
   @include prefix(box-shadow, 2px 2px 3px gray);
   @include prefix(animation, fadeIn .5s);
 
-  &.-disabled, &.-disabled:hover , &.-disabled:active {
+  &.-disabled {
     cursor: default;
     pointer-events: none;
     color: rgb(120, 120, 120);
@@ -88,21 +87,29 @@ $header-font-color: rgb(33,153,232);
     @include prefix(box-shadow, inset 2px 2px 3px gray);
     background-color: darken($background-color, 15%);
   }
-
-  .result-box &:active {
-    background-color: $background-color;
-    @include prefix(box-shadow, 2px 2px 3px gray);
-  }
-
-  .result-box &:hover {
-    color: rgb(120, 120, 120);
-    @include prefix(box-shadow, 2px 2px 3px gray);
-    cursor: default;
-  }
 }
 
 .result-wrapper {
   display: none;
+}
+
+.invite {
+  @media only screen and (max-width: 950px) {
+    display: none;
+  }
+
+  font-family: helvetica;
+  color: gray;
+  text-align: left;
+  position: fixed;
+  top: 1em;
+  left: 3em;
+  width: 150px;
+
+  p {
+    padding-top: 10px;
+    line-height: 110%;
+  }
 }
 
 .chat-container {

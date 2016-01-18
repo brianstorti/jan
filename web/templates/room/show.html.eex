@@ -6,6 +6,10 @@
 </div>
 
 <div class="row game">
+  <div class="invite">
+    <img src="<%= static_path(@conn, "/images/arrow.png") %>"> </img>
+    <p> Invite other players passing this url </p>
+  </div>
   <h1>Choose your weapon</h1>
 
   <div class="row weapons">
