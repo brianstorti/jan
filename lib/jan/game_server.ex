@@ -20,7 +20,9 @@ defmodule Jan.GameServer do
 
   def new_move(pid, player_name, move) do
     case GenServer.call(pid, {:new_move, player_name, move}) do
-      {:winner, winner} -> {:winner, winner}
+      {:winner, winner} ->
+        GenServer.cast(pid, {:compute_win, winner})
+        {:winner, winner}
       other_result -> other_result
     end
   end
@@ -41,12 +43,24 @@ defmodule Jan.GameServer do
     if Enum.any?(state, &(String.downcase(&1.name) == String.downcase(player_name))) do
       {:reply, :duplicate, state}
     else
-      {:reply, :ok, [%{name: player_name, move: nil} | state]}
+      {:reply, :ok, [%{name: player_name, move: nil, score: 0} | state]}
     end
   end
 
   def handle_cast({:remove_player, player_name}, state) do
     {:noreply, Enum.filter(state, &(&1.name != player_name))}
+  end
+
+  def handle_cast({:compute_win, winner}, state) do
+    new_state = Enum.map(state, fn player ->
+      if player.name == winner.name do
+        player = %{player | score: player.score + 1}
+      end
+
+      player
+    end)
+
+    {:noreply, new_state}
   end
 
   def handle_call(:players_list, _from, state) do

@@ -112,6 +112,10 @@ $header-font-color: rgb(33,153,232);
   }
 }
 
+.score {
+  margin-bottom: 5px;
+}
+
 .chat-container {
   @media only screen and (max-width: 950px) {
     display: none;

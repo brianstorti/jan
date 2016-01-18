@@ -39,6 +39,10 @@ let init = function() {
   });
 
   channel.on("players_changed", payload => {
+    payload.players.map( p => {
+      console.log(`${p.name}: ${p.score}`);
+    });
+
     let players = payload.players.map(playerView);
     $('.players').html(players);
   });
@@ -82,8 +86,11 @@ let leave = function (channel) {
 };
 
 let playerView = function (player) {
-    return `<div class="player-${player.name} large-4 medium-4 columns">` +
-             weaponView(player.name, player.move) +
+    return `<div class="large-4 medium-4 columns">` +
+             `<div class="score round label">${player.score}</div>` +
+             `<div class="player-${player.name}">` +
+               weaponView(player.name, player.move) +
+             '</div>' +
            '</div>';
 };
 
