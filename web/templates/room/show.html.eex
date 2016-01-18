@@ -1,28 +1,28 @@
-<input type="hidden" id="room-name" value="<%= @room %>" />
+<input type="hidden" class="room-name" value="<%= @room %>" />
 
 <div class="name">
-  <input id="player-name" autofocus="autofocus" placeholder="Enter your name" />
+  <input class="player-name" autofocus="autofocus" placeholder="Enter your name" />
 </div>
 
 <div class="row game">
   <h1>Choose your weapon</h1>
 
   <div class="row weapons">
-    <div class="large-4 medium-4 columns">
+    <div class="medium-4 columns">
       <a data-move="rock" class="weapon-wrapper">
         <i class="weapon fa fa-5x fa-hand-rock-o"></i>
         <p class="weapon-label">Rock</p>
       </a>
     </div>
 
-    <div class="large-4 medium-4 columns">
+    <div class="medium-4 columns">
       <a data-move="paper" class="weapon-wrapper">
         <i class="weapon fa fa-5x fa-hand-paper-o"></i>
         <p class="weapon-label">Paper</p>
       </a>
     </div>
 
-    <div class="large-4 medium-4 columns">
+    <div class="medium-4 columns">
       <a data-move="scissors" class="weapon-wrapper">
         <i class="weapon fa fa-5x fa-hand-scissors-o"></i>
         <p class="weapon-label">Scissors</p>
@@ -42,17 +42,17 @@
   <br />
   <br />
 
-   <div class="row result-wrapper">
-     <h1 class="result"> </h1>
-     <a id="new-game">New Game</a>
-   </div>
+  <div class="row result-wrapper">
+    <h1 class="result"> </h1>
+    <a class="new-game">New Game</a>
+  </div>
 
-   <div class="chat-container">
-     <div class="chat">
-       <div class="messages">
-       </div>
+  <div class="chat-container">
+    <div class="chat">
+      <div class="messages">
+      </div>
 
-         <textarea class="new-message" autofocus="autofocus"></textarea>
-     </div>
-   </div>
+      <textarea class="new-message" autofocus="autofocus"></textarea>
+    </div>
+  </div>
 </div>

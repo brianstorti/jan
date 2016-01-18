@@ -3,7 +3,7 @@ import {Socket} from "phoenix";
 let socket = new Socket("/socket");
 
 document.addEventListener('DOMContentLoaded', function() {
-  $('#player-name').off("keypress").on("keypress", e => {
+  $('.player-name').off("keypress").on("keypress", e => {
     if (e.keyCode == 13) {
       init();
     }
@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
 let init = function() {
   socket.connect();
 
-  let roomName = document.getElementById('room-name').value;
-  let playerName = document.getElementById('player-name').value;
+  let roomName = $('.room-name').val();
+  let playerName = $('.player-name').val();
   let channel = socket.channel("rooms:" + roomName, { player_name: playerName });
 
   channel.join().receive("ok", handleSuccessfulJoin)
@@ -30,7 +30,7 @@ let init = function() {
     $(`.player-${playerName}`).html(weaponView(playerName, weapon));
   });
 
-  $("#new-game").on("click", function (e) {
+  $(".new-game").on("click", function (e) {
     channel.push("new_game");
   });
 
