@@ -29,6 +29,14 @@ $header-font-color: rgb(33,153,232);
   color: gray;
 }
 
+.error-message {
+  font-size: 3vw;
+  width: 100%;
+  text-align: center;
+  color: red;
+  display: none;
+}
+
 .name {
   position: absolute;
   top: 35%;
@@ -48,6 +56,10 @@ $header-font-color: rgb(33,153,232);
   }
 }
 
+.weapons, .players {
+  margin-bottom: 4em;
+}
+
 .weapon-wrapper {
   text-align: center;
   font-weight: bold;
@@ -62,6 +74,7 @@ $header-font-color: rgb(33,153,232);
 
   &.-disabled, &.-disabled:hover , &.-disabled:active {
     cursor: default;
+    pointer-events: none;
     color: rgb(120, 120, 120);
     background-color: darken($background-color, 5%);
     @include prefix(box-shadow, none);

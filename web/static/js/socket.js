@@ -24,13 +24,13 @@ let init = function() {
     leave(channel);
   };
 
-  $("[data-move]").on("click", function (e) {
-    let weapon = $(e.currentTarget).data('move')
+  $("[data-move]").on("click", e => {
+    let weapon = $(e.currentTarget).data('move');
     channel.push("new_move", { move: weapon});
     $(`.player-${playerName}`).html(weaponView(playerName, weapon));
   });
 
-  $(".new-game").on("click", function (e) {
+  $(".new-game").on("click", e => {
     channel.push("new_game");
   });
 
@@ -46,16 +46,18 @@ let init = function() {
   channel.on("winner_found", payload => {
     $('.result-wrapper').show();
     $('.result').html(`${payload.player_name} won!`);
+    $('.weapon-wrapper').addClass('-disabled');
   });
 
   channel.on("draw", payload => {
     $('.result-wrapper').show();
     $('.result').html(`It's a draw!`);
+    $('.weapon-wrapper').addClass('-disabled');
   });
 
   channel.on("reset", payload => {
     $('.result-wrapper').hide();
-    $('.weapons.weapon-wrapper').removeClass('-disabled');
+    $('.weapon-wrapper').removeClass('-disabled');
   });
 
   channel.on("new_message", payload => {
@@ -71,6 +73,8 @@ let handleSuccessfulJoin = function(response) {
 
 let handleFailedJoin = function(response) {
   console.log("Unable to join", response);
+  $('.error-message').html(response);
+  $('.error-message').show();
 };
 
 let leave = function (channel) {

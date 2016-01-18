@@ -2,6 +2,7 @@
 
 <div class="name">
   <input class="player-name" autofocus="autofocus" placeholder="Enter your name" />
+  <p class="error-message" />
 </div>
 
 <div class="row game">
@@ -28,23 +29,17 @@
         <p class="weapon-label">Scissors</p>
       </a>
     </div>
+
+    <hr />
   </div>
 
-  <hr />
-
-  <br />
-  <br />
-  <br />
 
   <div class="row players">
   </div>
 
-  <br />
-  <br />
-
   <div class="row result-wrapper">
     <h1 class="result"> </h1>
-    <a class="new-game">New Game</a>
+    <a class="new-game button">New Game</a>
   </div>
 
   <div class="chat-container">

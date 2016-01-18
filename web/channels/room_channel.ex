@@ -3,15 +3,18 @@ defmodule Jan.RoomChannel do
 
   def join("rooms:" <> room_id, %{"player_name" => player_name}, socket) do
     pid = Jan.Registry.where_is(room_id)
-
     socket = socket
               |> assign(:pid, pid)
               |> assign(:player_name, player_name)
 
-    Jan.GameServer.add_player(pid, player_name)
+    case Jan.GameServer.add_player(pid, player_name) do
+      :ok ->
+        send self, :players_changed
+        {:ok, socket}
 
-    send self, :players_changed
-    {:ok, socket}
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   def handle_info(:players_changed, socket) do

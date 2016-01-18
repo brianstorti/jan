@@ -8,7 +8,10 @@ defmodule Jan.GameServer do
   end
 
   def add_player(pid, player_name) do
-    GenServer.cast(pid, {:add_player, player_name})
+    case GenServer.call(pid, {:add_player, player_name}) do
+      :ok -> :ok
+      :duplicate -> {:error, "There is already a '#{player_name}' in this room"}
+    end
   end
 
   def remove_player(pid, player_name) do
@@ -34,8 +37,12 @@ defmodule Jan.GameServer do
     {:ok, []}
   end
 
-  def handle_cast({:add_player, player_name}, state) do
-    {:noreply, [%{name: player_name, move: nil} | state]}
+  def handle_call({:add_player, player_name}, _from, state) do
+    if Enum.any?(state, &(String.downcase(&1.name) == String.downcase(player_name))) do
+      {:reply, :duplicate, state}
+    else
+      {:reply, :ok, [%{name: player_name, move: nil} | state]}
+    end
   end
 
   def handle_cast({:remove_player, player_name}, state) do
