@@ -14,6 +14,11 @@ defmodule Jan.RoomChannelTest do
     assert "Brian", socket.assigns.player_name
   end
 
+  test "fails to join if there is same player name in the room", %{socket: socket} do
+    message = "There is already a 'Brian' in this room"
+    {:error, message} = subscribe_and_join(socket, RoomChannel, "rooms:foo", %{"player_name" => "Brian"})
+  end
+
   test "broadcasts players list" do
     assert_broadcast "players_changed", %{players: [%{name: "Brian", move: nil}]}
   end
