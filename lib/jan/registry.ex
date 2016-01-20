@@ -28,6 +28,9 @@ defmodule Jan.Registry do
     {:reply, Map.get(state, room_id, :undefined), state}
   end
 
+  # As we are not trapping exits to unregister processes, if a registered process
+  # dies we will keep this invalid PID, which will cause issues for a room wih
+  # the same name
   def handle_call({:register, room_id}, _from, state) do
     {:ok, pid} = Jan.GameSupervisor.start_game
     {:reply, pid, Map.put(state, room_id, pid)}
