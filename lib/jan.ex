@@ -11,6 +11,7 @@ defmodule Jan do
       supervisor(Jan.Endpoint, []),
       # Start the Ecto repository
       supervisor(Jan.Repo, []),
+      supervisor(Jan.GameSupervisor, []),
       worker(Jan.Registry, []),
     ]
 

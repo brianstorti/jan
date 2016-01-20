@@ -29,7 +29,7 @@ defmodule Jan.Registry do
   end
 
   def handle_call({:register, room_id}, _from, state) do
-    {:ok, pid} = GenServer.start_link(Jan.GameServer, [])
+    {:ok, pid} = Jan.GameSupervisor.start_game
     {:reply, pid, Map.put(state, room_id, pid)}
   end
 
