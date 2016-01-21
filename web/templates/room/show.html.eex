@@ -1,3 +1,4 @@
+
 <input type="hidden" class="room-name" value="<%= @room %>" />
 
 <div class="name">

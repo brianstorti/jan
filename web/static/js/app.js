@@ -26,3 +26,6 @@ $('.room-name').off("keypress").on("keypress", e => {
     window.location = `/${roomName}`;
   }
 });
+
+var elmDiv = document.getElementById('elm-main')
+  , elmApp = Elm.embed(Elm.Jan, elmDiv);

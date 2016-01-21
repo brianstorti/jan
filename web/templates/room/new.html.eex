@@ -1,3 +1,5 @@
+<div id="elm-main"></div>
+
 <div class="name">
   <input class="room-name" autofocus="autofocus" placeholder="Enter a room name" />
 </div>
