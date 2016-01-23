@@ -27,5 +27,4 @@ $('.room-name').off("keypress").on("keypress", e => {
   }
 });
 
-var elmDiv = document.getElementById('elm-main')
-  , elmApp = Elm.embed(Elm.Jan, elmDiv);
+Elm.fullscreen(Elm.Jan);

@@ -6,53 +6,53 @@
   <p class="error-message" />
 </div>
 
-<div class="row game">
-  <div class="invite">
-    <img src="<%= static_path(@conn, "/images/arrow.png") %>"> </img>
-    <p> Invite other players passing this url </p>
-  </div>
-  <h1>Choose your weapon</h1>
+<%# <div class="row game"> %>
+<%#   <div class="invite"> %>
+<%#     <img src="<%= static_path(@conn, "/images/arrow.png") %1>"> </img> %>
+<%#     <p> Invite other players passing this url </p> %>
+<%#   </div> %>
+<%#   <h1>Choose your weapon</h1> %>
 
-  <div class="row weapons">
-    <div class="medium-4 columns">
-      <a data-move="rock" class="weapon-wrapper">
-        <i class="weapon fa fa-5x fa-hand-rock-o"></i>
-        <p class="weapon-label">Rock</p>
-      </a>
-    </div>
+<%#   <div class="row weapons"> %>
+<%#     <div class="medium-4 columns"> %>
+<%#       <a data-move="rock" class="weapon-wrapper"> %>
+<%#         <i class="weapon fa fa-5x fa-hand-rock-o"></i> %>
+<%#         <p class="weapon-label">Rock</p> %>
+<%#       </a> %>
+<%#     </div> %>
 
-    <div class="medium-4 columns">
-      <a data-move="paper" class="weapon-wrapper">
-        <i class="weapon fa fa-5x fa-hand-paper-o"></i>
-        <p class="weapon-label">Paper</p>
-      </a>
-    </div>
+<%#     <div class="medium-4 columns"> %>
+<%#       <a data-move="paper" class="weapon-wrapper"> %>
+<%#         <i class="weapon fa fa-5x fa-hand-paper-o"></i> %>
+<%#         <p class="weapon-label">Paper</p> %>
+<%#       </a> %>
+<%#     </div> %>
 
-    <div class="medium-4 columns">
-      <a data-move="scissors" class="weapon-wrapper">
-        <i class="weapon fa fa-5x fa-hand-scissors-o"></i>
-        <p class="weapon-label">Scissors</p>
-      </a>
-    </div>
+<%#     <div class="medium-4 columns"> %>
+<%#       <a data-move="scissors" class="weapon-wrapper"> %>
+<%#         <i class="weapon fa fa-5x fa-hand-scissors-o"></i> %>
+<%#         <p class="weapon-label">Scissors</p> %>
+<%#       </a> %>
+<%#     </div> %>
 
-    <hr />
-  </div>
+<%#     <hr /> %>
+<%#   </div> %>
 
 
-  <div class="row players">
-  </div>
+<%#   <div class="row players"> %>
+<%#   </div> %>
 
-  <div class="row result-wrapper">
-    <h1 class="result"> </h1>
-    <a class="new-game button">New Game</a>
-  </div>
+<%#   <div class="row result-wrapper"> %>
+<%#     <h1 class="result"> </h1> %>
+<%#     <a class="new-game button">New Game</a> %>
+<%#   </div> %>
 
-  <div class="chat-container">
-    <div class="chat">
-      <div class="messages">
-      </div>
+<%#   <div class="chat-container"> %>
+<%#     <div class="chat"> %>
+<%#       <div class="messages"> %>
+<%#       </div> %>
 
-      <textarea class="new-message" autofocus="autofocus"></textarea>
-    </div>
-  </div>
-</div>
+<%#       <textarea class="new-message" autofocus="autofocus"></textarea> %>
+<%#     </div> %>
+<%#   </div> %>
+<%# </div> %>
