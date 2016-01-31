@@ -1,0 +1,74 @@
+Elm.Jan = Elm.Jan || {};
+Elm.Jan.make = function (_elm) {
+   "use strict";
+   _elm.Jan = _elm.Jan || {};
+   if (_elm.Jan.values) return _elm.Jan.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm);
+   var _op = {};
+   var testPort = Elm.Native.Port.make(_elm).inboundSignal("testPort",
+   "String",
+   function (v) {
+      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",v);
+   });
+   var TestAction = function (a) {    return {ctor: "TestAction",_0: a};};
+   var NoOp = {ctor: "NoOp"};
+   var header = A2($Html.h1,_U.list([]),_U.list([$Html.text("Choose your weapon")]));
+   var weaponView = F2(function (address,_p0) {
+      var _p1 = _p0;
+      var _p2 = _p1.name;
+      var iconClassName = A2($Basics._op["++"],"fa-hand-",A2($Basics._op["++"],$String.toLower(_p2),"-o"));
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("medium-4 columns")]),
+      _U.list([A2($Html.a,
+      _U.list([$Html$Attributes.$class("weapon-wrapper")]),
+      _U.list([A2($Html.i,_U.list([$Html$Attributes.$class(A2($Basics._op["++"],"weapon fa fa-5x ",iconClassName))]),_U.list([]))
+              ,A2($Html.p,_U.list([$Html$Attributes.$class("weapon-label")]),_U.list([$Html.text(_p2)]))]))]));
+   });
+   var weaponsList = function (model) {
+      return A2($Html.div,_U.list([$Html$Attributes.$class("row weapons")]),A2($List.map,weaponView($Html.address),model.possibleWeapons));
+   };
+   var view = F2(function (address,model) {    return A2($Html.div,_U.list([$Html$Attributes.$class("row game")]),_U.list([header,weaponsList(model)]));});
+   var createWeapon = function (name) {    return {name: name};};
+   var initialModel = {possibleWeapons: _U.list([createWeapon("Rock"),createWeapon("Paper"),createWeapon("Scissors")]),players: _U.list([])};
+   var update = F2(function (action,model) {
+      var _p3 = action;
+      if (_p3.ctor === "NoOp") {
+            return model;
+         } else {
+            return _U.update(model,{possibleWeapons: A2($List._op["::"],createWeapon(_p3._0),model.possibleWeapons)});
+         }
+   });
+   var Player = F2(function (a,b) {    return {name: a,weapon: b};});
+   var Weapon = function (a) {    return {name: a};};
+   var Model = F2(function (a,b) {    return {possibleWeapons: a,players: b};});
+   var inbox = $Signal.mailbox(NoOp);
+   var actions = A2($Signal.merge,inbox.signal,A2($Signal.map,TestAction,testPort));
+   var model = A3($Signal.foldp,update,initialModel,actions);
+   var main = A2($Signal.map,view(inbox.address),model);
+   return _elm.Jan.values = {_op: _op
+                            ,main: main
+                            ,inbox: inbox
+                            ,Model: Model
+                            ,Weapon: Weapon
+                            ,Player: Player
+                            ,actions: actions
+                            ,model: model
+                            ,createWeapon: createWeapon
+                            ,initialModel: initialModel
+                            ,weaponView: weaponView
+                            ,header: header
+                            ,weaponsList: weaponsList
+                            ,view: view
+                            ,NoOp: NoOp
+                            ,TestAction: TestAction
+                            ,update: update};
+};

@@ -4,71 +4,124 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import String exposing (..)
-import StartApp.Simple as StartApp
+import Signal exposing (Address)
 
+
+main : Signal Html
 main =
-  StartApp.start {
-    model = model,
-    view = view,
-    update = update
-  }
+  Signal.map (view inbox.address) model
+
+
+inbox : Signal.Mailbox Action
+inbox =
+  Signal.mailbox NoOp
 
 
 -- MODEL
 
+type alias Model =
+  {
+    possibleWeapons : List Weapon,
+    players : List Player
+  }
 
-newWeapon name = { name = name }
+
+type alias Weapon =
+  {
+    name : String
+  }
 
 
+type alias Player =
+  {
+    name : String,
+    weapon : Weapon
+  }
+
+
+actions : Signal Action
+actions =
+  Signal.merge inbox.signal (Signal.map TestAction testPort)
+
+
+model : Signal Model
 model =
+  Signal.foldp update initialModel actions
+
+
+createWeapon : String -> Weapon
+createWeapon name =
+  { name = name }
+
+
+initialModel : Model
+initialModel =
   {
     possibleWeapons =
-      [ newWeapon "Rock",
-        newWeapon "Paper",
-        newWeapon "Scissors"
-      ]
+      [ createWeapon "Rock",
+        createWeapon "Paper",
+        createWeapon "Scissors"
+      ],
+
+    players = []
   }
 
 
 -- VIEW
 
 
-weaponView address weapon =
+weaponView address {name} =
   let
-    iconClassName = "fa-hand-" ++ String.toLower(weapon.name) ++ "-o"
+    iconClassName = "fa-hand-" ++ String.toLower(name) ++ "-o"
   in
-  div
-    [ class "medium-4 columns" ]
-    [ a
-        [ class "weapon-wrapper" ]
-        [ i [ class ("weapon fa fa-5x " ++ iconClassName) ] [],
-          p [ class "weapon-label" ] [ text weapon.name ]
-        ]
-    ]
+    div
+      [ class "medium-4 columns" ]
+      [ a
+          [ class "weapon-wrapper" ]
+          [ i [ class ("weapon fa fa-5x " ++ iconClassName) ] [],
+            p [ class "weapon-label" ] [ text name ]
+          ]
+      ]
 
 
+header : Html
 header =
   h1 [] [ text "Choose your weapon" ]
 
 
-weaponsList =
+weaponsList : Model -> Html
+weaponsList model =
   div
     [ class "row weapons" ]
     (List.map (weaponView address) model.possibleWeapons)
 
 
+view : Address Action -> Model -> Html
 view address model =
   div
     [ class "row game" ]
-    [ header, weaponsList ]
+    [
+      header, weaponsList model
+    ]
 
 
 -- UPDATE
 
 
-type Action = NoOp
+type Action = NoOp | TestAction String
 
 
+update : Action -> Model -> Model
 update action model =
   case action of
-    NoOp -> model
+    NoOp ->
+      model
+
+    TestAction value ->
+      { model | possibleWeapons = (createWeapon value) :: model.possibleWeapons }
+
+
+
+-- PORTS
+
+port testPort : Signal String
