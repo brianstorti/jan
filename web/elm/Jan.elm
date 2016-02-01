@@ -73,6 +73,7 @@ initialModel =
 -- VIEW
 
 
+weaponView : Address Action -> Weapon -> Html
 weaponView address {name} =
   let
     iconClassName = "fa-hand-" ++ String.toLower(name) ++ "-o"
@@ -86,6 +87,7 @@ weaponView address {name} =
           ]
       ]
 
+playerWeaponView : Address Action -> Player -> Html
 playerWeaponView address player =
   let
       iconClassName = if String.isEmpty(player.move)
@@ -101,6 +103,7 @@ playerWeaponView address player =
 
 
 
+playerView : Address Action -> Player -> Html
 playerView address player =
   div
     [ class "large-4 medium-4 columns" ]
@@ -114,15 +117,15 @@ header =
   h1 [] [ text "Choose your weapon" ]
 
 
-weaponsList : Model -> Html
-weaponsList model =
+weaponsList : Address Action -> Model -> Html
+weaponsList address model =
   div
     [ class "row weapons" ]
     (List.map (weaponView address) model.possibleWeapons)
 
 
-playersList : Model -> Html
-playersList model =
+playersList : Address Action -> Model -> Html
+playersList address model =
   div
     [ class "row players" ]
     (List.map (playerView address) model.players)
@@ -134,8 +137,8 @@ view address model =
     [ class "row game" ]
     [
       header,
-      weaponsList model,
-      playersList model
+      weaponsList address model,
+      playersList address model
     ]
 
 

@@ -52,9 +52,9 @@ Elm.Jan.make = function (_elm) {
       _U.list([A2($Html.div,_U.list([$Html$Attributes.$class("score round label")]),_U.list([$Html.text($Basics.toString(player.score))]))
               ,A2($Html.div,_U.list([]),_U.list([A2(playerWeaponView,address,player)]))]));
    });
-   var playersList = function (model) {
-      return A2($Html.div,_U.list([$Html$Attributes.$class("row players")]),A2($List.map,playerView($Html.address),model.players));
-   };
+   var playersList = F2(function (address,model) {
+      return A2($Html.div,_U.list([$Html$Attributes.$class("row players")]),A2($List.map,playerView(address),model.players));
+   });
    var weaponView = F2(function (address,_p0) {
       var _p1 = _p0;
       var _p2 = _p1.name;
@@ -66,11 +66,11 @@ Elm.Jan.make = function (_elm) {
       _U.list([A2($Html.i,_U.list([$Html$Attributes.$class(A2($Basics._op["++"],"weapon fa fa-5x ",iconClassName))]),_U.list([]))
               ,A2($Html.p,_U.list([$Html$Attributes.$class("weapon-label")]),_U.list([$Html.text(_p2)]))]))]));
    });
-   var weaponsList = function (model) {
-      return A2($Html.div,_U.list([$Html$Attributes.$class("row weapons")]),A2($List.map,weaponView($Html.address),model.possibleWeapons));
-   };
+   var weaponsList = F2(function (address,model) {
+      return A2($Html.div,_U.list([$Html$Attributes.$class("row weapons")]),A2($List.map,weaponView(address),model.possibleWeapons));
+   });
    var view = F2(function (address,model) {
-      return A2($Html.div,_U.list([$Html$Attributes.$class("row game")]),_U.list([header,weaponsList(model),playersList(model)]));
+      return A2($Html.div,_U.list([$Html$Attributes.$class("row game")]),_U.list([header,A2(weaponsList,address,model),A2(playersList,address,model)]));
    });
    var createWeapon = function (name) {    return {name: name};};
    var initialModel = {possibleWeapons: _U.list([createWeapon("Rock"),createWeapon("Paper"),createWeapon("Scissors")]),players: _U.list([])};
