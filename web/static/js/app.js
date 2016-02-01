@@ -26,9 +26,3 @@ $('.room-name').off("keypress").on("keypress", e => {
     window.location = `/${roomName}`;
   }
 });
-
-let elmApp = Elm.fullscreen(Elm.Jan, { testPort: "" });
-
-elmApp.ports.testPort.send("paper");
-elmApp.ports.testPort.send("paper");
-elmApp.ports.testPort.send("paper");

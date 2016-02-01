@@ -10302,14 +10302,47 @@ Elm.Jan.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm);
    var _op = {};
+   var playersPort = Elm.Native.Port.make(_elm).inboundSignal("playersPort",
+   "List Jan.Player",
+   function (v) {
+      return typeof v === "object" && v instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.map(function (v) {
+         return typeof v === "object" && "name" in v && "move" in v && "score" in v ? {_: {}
+                                                                                      ,name: typeof v.name === "string" || typeof v.name === "object" && v.name instanceof String ? v.name : _U.badPort("a string",
+                                                                                      v.name)
+                                                                                      ,move: typeof v.move === "string" || typeof v.move === "object" && v.move instanceof String ? v.move : _U.badPort("a string",
+                                                                                      v.move)
+                                                                                      ,score: typeof v.score === "number" && isFinite(v.score) && Math.floor(v.score) === v.score ? v.score : _U.badPort("an integer",
+                                                                                      v.score)} : _U.badPort("an object with fields `name`, `move`, `score`",v);
+      })) : _U.badPort("an array",v);
+   });
    var testPort = Elm.Native.Port.make(_elm).inboundSignal("testPort",
    "String",
    function (v) {
       return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",v);
    });
+   var PlayersChanged = function (a) {    return {ctor: "PlayersChanged",_0: a};};
    var TestAction = function (a) {    return {ctor: "TestAction",_0: a};};
    var NoOp = {ctor: "NoOp"};
    var header = A2($Html.h1,_U.list([]),_U.list([$Html.text("Choose your weapon")]));
+   var playerWeaponView = F2(function (address,player) {
+      var iconClassName = $String.isEmpty(player.move) ? "fa-question" : A2($Basics._op["++"],
+      "fa-hand-",
+      A2($Basics._op["++"],$String.toLower(player.move),"-o"));
+      return A2($Html.a,
+      _U.list([$Html$Attributes.$class("weapon-wrapper -disabled")]),
+      _U.list([A2($Html.p,_U.list([$Html$Attributes.$class("weapon-label")]),_U.list([$Html.text(player.name)]))
+              ,A2($Html.i,_U.list([$Html$Attributes.$class(A2($Basics._op["++"],"weapon fa fa-5x ",iconClassName))]),_U.list([]))
+              ,A2($Html.p,_U.list([$Html$Attributes.$class("weapon-label")]),_U.list([$Html.text(player.move)]))]));
+   });
+   var playerView = F2(function (address,player) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("large-4 medium-4 columns")]),
+      _U.list([A2($Html.div,_U.list([$Html$Attributes.$class("score round label")]),_U.list([$Html.text($Basics.toString(player.score))]))
+              ,A2($Html.div,_U.list([]),_U.list([A2(playerWeaponView,address,player)]))]));
+   });
+   var playersList = function (model) {
+      return A2($Html.div,_U.list([$Html$Attributes.$class("row players")]),A2($List.map,playerView($Html.address),model.players));
+   };
    var weaponView = F2(function (address,_p0) {
       var _p1 = _p0;
       var _p2 = _p1.name;
@@ -10324,22 +10357,23 @@ Elm.Jan.make = function (_elm) {
    var weaponsList = function (model) {
       return A2($Html.div,_U.list([$Html$Attributes.$class("row weapons")]),A2($List.map,weaponView($Html.address),model.possibleWeapons));
    };
-   var view = F2(function (address,model) {    return A2($Html.div,_U.list([$Html$Attributes.$class("row game")]),_U.list([header,weaponsList(model)]));});
+   var view = F2(function (address,model) {
+      return A2($Html.div,_U.list([$Html$Attributes.$class("row game")]),_U.list([header,weaponsList(model),playersList(model)]));
+   });
    var createWeapon = function (name) {    return {name: name};};
    var initialModel = {possibleWeapons: _U.list([createWeapon("Rock"),createWeapon("Paper"),createWeapon("Scissors")]),players: _U.list([])};
    var update = F2(function (action,model) {
       var _p3 = action;
-      if (_p3.ctor === "NoOp") {
-            return model;
-         } else {
-            return _U.update(model,{possibleWeapons: A2($List._op["::"],createWeapon(_p3._0),model.possibleWeapons)});
-         }
+      switch (_p3.ctor)
+      {case "NoOp": return model;
+         case "TestAction": return _U.update(model,{possibleWeapons: A2($List._op["::"],createWeapon(_p3._0),model.possibleWeapons)});
+         default: return _U.update(model,{players: _p3._0});}
    });
-   var Player = F2(function (a,b) {    return {name: a,weapon: b};});
+   var Player = F3(function (a,b,c) {    return {name: a,move: b,score: c};});
    var Weapon = function (a) {    return {name: a};};
    var Model = F2(function (a,b) {    return {possibleWeapons: a,players: b};});
    var inbox = $Signal.mailbox(NoOp);
-   var actions = A2($Signal.merge,inbox.signal,A2($Signal.map,TestAction,testPort));
+   var actions = $Signal.mergeMany(_U.list([inbox.signal,A2($Signal.map,TestAction,testPort),A2($Signal.map,PlayersChanged,playersPort)]));
    var model = A3($Signal.foldp,update,initialModel,actions);
    var main = A2($Signal.map,view(inbox.address),model);
    return _elm.Jan.values = {_op: _op
@@ -10353,10 +10387,14 @@ Elm.Jan.make = function (_elm) {
                             ,createWeapon: createWeapon
                             ,initialModel: initialModel
                             ,weaponView: weaponView
+                            ,playerWeaponView: playerWeaponView
+                            ,playerView: playerView
                             ,header: header
                             ,weaponsList: weaponsList
+                            ,playersList: playersList
                             ,view: view
                             ,NoOp: NoOp
                             ,TestAction: TestAction
+                            ,PlayersChanged: PlayersChanged
                             ,update: update};
 };

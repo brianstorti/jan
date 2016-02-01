@@ -43,7 +43,7 @@ defmodule Jan.GameServer do
     if Enum.any?(state, &(String.downcase(&1.name) == String.downcase(player_name))) do
       {:reply, :duplicate, state}
     else
-      {:reply, :ok, [%{name: player_name, move: nil, score: 0} | state]}
+      {:reply, :ok, [%{name: player_name, move: "", score: 0} | state]}
     end
   end
 

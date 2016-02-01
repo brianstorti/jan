@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
 let init = function() {
   socket.connect();
 
+  let elmApp = Elm.fullscreen(Elm.Jan, { testPort: "", playersPort: [] });
+
   let roomName = $('.room-name').val();
   let playerName = $('.player-name').val();
   let channel = socket.channel("rooms:" + roomName, { player_name: playerName });
@@ -39,12 +41,9 @@ let init = function() {
   });
 
   channel.on("players_changed", payload => {
-    payload.players.map( p => {
-      console.log(`${p.name}: ${p.score}`);
-    });
-
-    let players = payload.players.map(playerView);
-    $('.players').html(players);
+    elmApp.ports.playersPort.send(payload.players);
+    // let players = payload.players.map(playerView);
+    // $('.players').html(players);
   });
 
   channel.on("winner_found", payload => {
