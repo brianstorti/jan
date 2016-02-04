@@ -28,7 +28,8 @@ let init = function() {
 
 let handleSuccessfulJoin = function(response, channel) {
   let elmApp = Elm.fullscreen(Elm.Jan, { playersPort: [],
-                                         resultFoundPort: "" });
+                                         resultFoundPort: "",
+                                         resetGamePort: []});
 
   $('.game').show();
   $('.name').hide();
@@ -47,6 +48,11 @@ let handleSuccessfulJoin = function(response, channel) {
 
   channel.on("result_found", payload => {
     elmApp.ports.resultFoundPort.send(payload.message);
+  });
+
+  channel.on("reset", payload => {
+    console.log("reset");
+    elmApp.ports.resetGamePort.send([]);
   });
 };
 

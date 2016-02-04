@@ -15,6 +15,11 @@ Elm.Jan.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm);
    var _op = {};
+   var resetGamePort = Elm.Native.Port.make(_elm).inboundSignal("resetGamePort",
+   "()",
+   function (v) {
+      return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple0"} : _U.badPort("an array",v);
+   });
    var resultFoundPort = Elm.Native.Port.make(_elm).inboundSignal("resultFoundPort",
    "String",
    function (v) {
@@ -102,7 +107,7 @@ Elm.Jan.make = function (_elm) {
    var inbox = $Signal.mailbox(NoOp);
    var actions = $Signal.mergeMany(_U.list([inbox.signal
                                            ,A2($Signal.map,PlayersChanged,playersPort)
-                                           ,A2($Signal.map,function (_p1) {    return ResetGame;},newGamePort)
+                                           ,A2($Signal.map,function (_p1) {    return ResetGame;},resetGamePort)
                                            ,A2($Signal.map,ResultFound,resultFoundPort)]));
    var model = A3($Signal.foldp,update,initialModel,actions);
    var main = A2($Signal.map,view(inbox.address),model);

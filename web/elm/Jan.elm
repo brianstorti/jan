@@ -53,7 +53,7 @@ actions : Signal Action
 actions =
   Signal.mergeMany [inbox.signal,
                     (Signal.map PlayersChanged playersPort),
-                    (Signal.map (\_ -> ResetGame) newGamePort),
+                    (Signal.map (\_ -> ResetGame) resetGamePort),
                     (Signal.map ResultFound resultFoundPort)]
 
 
@@ -198,6 +198,7 @@ update action model =
 
 port playersPort : Signal (List Player)
 port resultFoundPort : Signal String
+port resetGamePort : Signal ()
 
 port chooseWeaponPort : Signal String
 port chooseWeaponPort =
