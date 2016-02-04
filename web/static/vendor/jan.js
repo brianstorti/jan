@@ -10350,13 +10350,14 @@ Elm.Jan.make = function (_elm) {
    _U.list([A2($Html.img,_U.list([$Html$Attributes.src("/images/arrow.png")]),_U.list([]))]));
    var header = A2($Html.h1,_U.list([]),_U.list([$Html.text("Choose your weapon")]));
    var playerWeaponView = F3(function (address,player,model) {
-      var shouldHideIcon = $String.isEmpty(model.resultMessage) && ($String.isEmpty(player.move) || !_U.eq(player.name,model.currentPlayer));
-      var iconClassName = shouldHideIcon ? "fa-question" : A2($Basics._op["++"],"fa-hand-",A2($Basics._op["++"],$String.toLower(player.move),"-o"));
+      var shouldHideWeapon = $String.isEmpty(model.resultMessage) && ($String.isEmpty(player.move) || !_U.eq(player.name,model.currentPlayer));
+      var iconClassName = shouldHideWeapon ? "fa-question" : A2($Basics._op["++"],"fa-hand-",A2($Basics._op["++"],$String.toLower(player.move),"-o"));
+      var weaponDescription = shouldHideWeapon ? "..." : player.move;
       return A2($Html.a,
       _U.list([$Html$Attributes.$class("weapon-wrapper -disabled")]),
       _U.list([A2($Html.p,_U.list([$Html$Attributes.$class("weapon-label")]),_U.list([$Html.text(player.name)]))
               ,A2($Html.i,_U.list([$Html$Attributes.$class(A2($Basics._op["++"],"weapon fa fa-5x ",iconClassName))]),_U.list([]))
-              ,A2($Html.p,_U.list([$Html$Attributes.$class("weapon-label")]),_U.list([$Html.text(player.move)]))]));
+              ,A2($Html.p,_U.list([$Html$Attributes.$class("weapon-label")]),_U.list([$Html.text(weaponDescription)]))]));
    });
    var playerView = F3(function (address,model,player) {
       return A2($Html.div,

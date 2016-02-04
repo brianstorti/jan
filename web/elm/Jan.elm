@@ -106,19 +106,21 @@ weaponView address model weapon =
 playerWeaponView : Address Action -> Player -> Model -> Html
 playerWeaponView address player model =
   let
-      shouldHideIcon =
+      shouldHideWeapon =
         String.isEmpty(model.resultMessage) &&
         (String.isEmpty(player.move) || player.name /= model.currentPlayer)
 
-      iconClassName = if shouldHideIcon
+      iconClassName = if shouldHideWeapon
                          then "fa-question"
                          else "fa-hand-" ++ String.toLower(player.move) ++ "-o"
+
+      weaponDescription = if shouldHideWeapon then "..." else player.move
   in
      a
        [ class "weapon-wrapper -disabled" ]
        [ p [ class "weapon-label" ] [ text player.name ],
          i [ class ("weapon fa fa-5x " ++ iconClassName) ] [],
-         p [ class "weapon-label" ] [ text player.move ]
+         p [ class "weapon-label" ] [ text weaponDescription ]
        ]
 
 
