@@ -16,13 +16,22 @@ inbox : Signal.Mailbox Action
 inbox =
   Signal.mailbox NoOp
 
+chooseWeaponMailbox : Signal.Mailbox String
+chooseWeaponMailbox =
+  Signal.mailbox ""
+
+
+newGameMailbox : Signal.Mailbox ()
+newGameMailbox =
+  Signal.mailbox ()
 
 -- MODEL
 
 type alias Model =
   {
     possibleWeapons : List Weapon,
-    players : List Player
+    players : List Player,
+    winner : String
   }
 
 
@@ -44,7 +53,8 @@ actions : Signal Action
 actions =
   Signal.mergeMany [inbox.signal,
                     (Signal.map TestAction testPort),
-                    (Signal.map PlayersChanged playersPort)]
+                    (Signal.map PlayersChanged playersPort),
+                    (Signal.map WinnerFound winnerFoundPort)]
 
 
 model : Signal Model
@@ -66,7 +76,8 @@ initialModel =
         createWeapon "Scissors"
       ],
 
-    players = []
+    players = [],
+    winner = ""
   }
 
 
@@ -74,16 +85,16 @@ initialModel =
 
 
 weaponView : Address Action -> Weapon -> Html
-weaponView address {name} =
+weaponView address weapon =
   let
-    iconClassName = "fa-hand-" ++ String.toLower(name) ++ "-o"
+    iconClassName = "fa-hand-" ++ String.toLower(weapon.name) ++ "-o"
   in
     div
       [ class "medium-4 columns" ]
       [ a
-          [ class "weapon-wrapper" ]
+          [ class "weapon-wrapper", onClick chooseWeaponMailbox.address (String.toLower weapon.name)]
           [ i [ class ("weapon fa fa-5x " ++ iconClassName) ] [],
-            p [ class "weapon-label" ] [ text name ]
+            p [ class "weapon-label" ] [ text weapon.name ]
           ]
       ]
 
@@ -131,6 +142,19 @@ playersList address model =
     (List.map (playerView address) model.players)
 
 
+winnerView : Address Action -> Model -> Html
+winnerView address model =
+  if String.isEmpty(model.winner) then
+     div [] []
+  else
+    div [ class "row result-wrapper" ]
+        [ h1 [ class "result" ]
+             [ text ("Winner found: " ++ model.winner) ],
+
+          a [ class "new-game button", onClick newGameMailbox.address () ]
+            [ text "New Game" ] ]
+
+
 view : Address Action -> Model -> Html
 view address model =
   div
@@ -138,14 +162,20 @@ view address model =
     [
       header,
       weaponsList address model,
-      playersList address model
+      playersList address model,
+      winnerView address model
     ]
 
 
 -- UPDATE
 
 
-type Action = NoOp | TestAction String | PlayersChanged (List Player)
+type Action
+      = NoOp
+      | TestAction String
+      | PlayersChanged (List Player)
+      | WinnerFound String
+      -- | ResetGame
 
 
 update : Action -> Model -> Model
@@ -160,9 +190,21 @@ update action model =
     PlayersChanged players ->
       { model | players = players }
 
+    WinnerFound playerName ->
+      { model | winner = playerName }
+
 
 
 -- PORTS
 
 port testPort : Signal String
 port playersPort : Signal (List Player)
+port winnerFoundPort : Signal String
+
+port chooseWeaponPort : Signal String
+port chooseWeaponPort =
+  chooseWeaponMailbox.signal
+
+port newGamePort : Signal ()
+port newGamePort =
+  newGameMailbox.signal

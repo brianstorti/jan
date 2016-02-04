@@ -80,11 +80,11 @@ defmodule Jan.GameServer do
   end
 
   def handle_cast(:reset_game, state) do
-    {:noreply, Enum.map(state, &(%{&1 | move: nil}))}
+    {:noreply, Enum.map(state, &(%{&1 | move: ""}))}
   end
 
   defp answer_for(players) do
-    all_players_moved = players |> Enum.map(&(&1.move)) |> Enum.all?
+    all_players_moved = players |> Enum.map(&(&1.move)) |> Enum.all?(&(&1 != ""))
 
     if all_players_moved do
       find_winner(players)

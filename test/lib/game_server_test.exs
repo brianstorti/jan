@@ -8,7 +8,7 @@ defmodule Jan.GameServerTest do
     assert Enum.empty?(GameServer.get_players_list(pid))
 
     GameServer.add_player(pid, "Brian")
-    assert [%{name: "Brian", move: nil, score: 0}] == GameServer.get_players_list(pid)
+    assert [%{name: "Brian", move: "", score: 0}] == GameServer.get_players_list(pid)
 
     GameServer.remove_player(pid, "Brian")
     assert [] == GameServer.get_players_list(pid)

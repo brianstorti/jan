@@ -13,7 +13,17 @@ document.addEventListener('DOMContentLoaded', function() {
 let init = function() {
   socket.connect();
 
-  let elmApp = Elm.fullscreen(Elm.Jan, { testPort: "", playersPort: [] });
+  let elmApp = Elm.fullscreen(Elm.Jan, { testPort: "",
+                                         playersPort: [],
+                                         winnerFoundPort: "" });
+
+  elmApp.ports.chooseWeaponPort.subscribe(function (weapon) {
+    channel.push("new_move", { move: weapon});
+  });
+
+  elmApp.ports.newGamePort.subscribe(function () {
+    channel.push("new_game");
+  });
 
   let roomName = $('.room-name').val();
   let playerName = $('.player-name').val();
@@ -26,41 +36,22 @@ let init = function() {
     leave(channel);
   };
 
-  $("[data-move]").on("click", e => {
-    let weapon = $(e.currentTarget).data('move');
-    channel.push("new_move", { move: weapon});
-    $(`.player-${playerName}`).html(weaponView(playerName, weapon));
-  });
-
-  $(".new-game").on("click", e => {
-    channel.push("new_game");
-  });
-
   $('.new-message').off("keypress").on("keypress", e => {
     if (e.keyCode == 13 && !e.shiftKey) sendNewMessage(channel);
   });
 
   channel.on("players_changed", payload => {
     elmApp.ports.playersPort.send(payload.players);
-    // let players = payload.players.map(playerView);
-    // $('.players').html(players);
   });
 
   channel.on("winner_found", payload => {
-    $('.result-wrapper').show();
-    $('.result').html(`${payload.player_name} won!`);
-    $('.weapon-wrapper').addClass('-disabled');
+    elmApp.ports.winnerFoundPort.send(payload.player_name);
   });
 
   channel.on("draw", payload => {
     $('.result-wrapper').show();
     $('.result').html(`It's a draw!`);
     $('.weapon-wrapper').addClass('-disabled');
-  });
-
-  channel.on("reset", payload => {
-    $('.result-wrapper').hide();
-    $('.weapon-wrapper').removeClass('-disabled');
   });
 
   channel.on("new_message", payload => {

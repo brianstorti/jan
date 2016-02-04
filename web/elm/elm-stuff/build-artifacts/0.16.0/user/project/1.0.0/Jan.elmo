@@ -8,12 +8,18 @@ Elm.Jan.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm);
    var _op = {};
+   var winnerFoundPort = Elm.Native.Port.make(_elm).inboundSignal("winnerFoundPort",
+   "String",
+   function (v) {
+      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",v);
+   });
    var playersPort = Elm.Native.Port.make(_elm).inboundSignal("playersPort",
    "List Jan.Player",
    function (v) {
@@ -32,6 +38,7 @@ Elm.Jan.make = function (_elm) {
    function (v) {
       return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",v);
    });
+   var WinnerFound = function (a) {    return {ctor: "WinnerFound",_0: a};};
    var PlayersChanged = function (a) {    return {ctor: "PlayersChanged",_0: a};};
    var TestAction = function (a) {    return {ctor: "TestAction",_0: a};};
    var NoOp = {ctor: "NoOp"};
@@ -55,42 +62,60 @@ Elm.Jan.make = function (_elm) {
    var playersList = F2(function (address,model) {
       return A2($Html.div,_U.list([$Html$Attributes.$class("row players")]),A2($List.map,playerView(address),model.players));
    });
-   var weaponView = F2(function (address,_p0) {
-      var _p1 = _p0;
-      var _p2 = _p1.name;
-      var iconClassName = A2($Basics._op["++"],"fa-hand-",A2($Basics._op["++"],$String.toLower(_p2),"-o"));
+   var createWeapon = function (name) {    return {name: name};};
+   var initialModel = {possibleWeapons: _U.list([createWeapon("Rock"),createWeapon("Paper"),createWeapon("Scissors")]),players: _U.list([]),winner: ""};
+   var update = F2(function (action,model) {
+      var _p0 = action;
+      switch (_p0.ctor)
+      {case "NoOp": return model;
+         case "TestAction": return _U.update(model,{possibleWeapons: A2($List._op["::"],createWeapon(_p0._0),model.possibleWeapons)});
+         case "PlayersChanged": return _U.update(model,{players: _p0._0});
+         default: return _U.update(model,{winner: _p0._0});}
+   });
+   var Player = F3(function (a,b,c) {    return {name: a,move: b,score: c};});
+   var Weapon = function (a) {    return {name: a};};
+   var Model = F3(function (a,b,c) {    return {possibleWeapons: a,players: b,winner: c};});
+   var newGameMailbox = $Signal.mailbox({ctor: "_Tuple0"});
+   var winnerView = F2(function (address,model) {
+      return $String.isEmpty(model.winner) ? A2($Html.div,_U.list([]),_U.list([])) : A2($Html.div,
+      _U.list([$Html$Attributes.$class("row result-wrapper")]),
+      _U.list([A2($Html.h1,_U.list([$Html$Attributes.$class("result")]),_U.list([$Html.text(A2($Basics._op["++"],"Winner found: ",model.winner))]))
+              ,A2($Html.a,
+              _U.list([$Html$Attributes.$class("new-game button"),A2($Html$Events.onClick,newGameMailbox.address,{ctor: "_Tuple0"})]),
+              _U.list([$Html.text("New Game")]))]));
+   });
+   var newGamePort = Elm.Native.Port.make(_elm).outboundSignal("newGamePort",function (v) {    return [];},newGameMailbox.signal);
+   var chooseWeaponMailbox = $Signal.mailbox("");
+   var weaponView = F2(function (address,weapon) {
+      var iconClassName = A2($Basics._op["++"],"fa-hand-",A2($Basics._op["++"],$String.toLower(weapon.name),"-o"));
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("medium-4 columns")]),
       _U.list([A2($Html.a,
-      _U.list([$Html$Attributes.$class("weapon-wrapper")]),
+      _U.list([$Html$Attributes.$class("weapon-wrapper"),A2($Html$Events.onClick,chooseWeaponMailbox.address,$String.toLower(weapon.name))]),
       _U.list([A2($Html.i,_U.list([$Html$Attributes.$class(A2($Basics._op["++"],"weapon fa fa-5x ",iconClassName))]),_U.list([]))
-              ,A2($Html.p,_U.list([$Html$Attributes.$class("weapon-label")]),_U.list([$Html.text(_p2)]))]))]));
+              ,A2($Html.p,_U.list([$Html$Attributes.$class("weapon-label")]),_U.list([$Html.text(weapon.name)]))]))]));
    });
    var weaponsList = F2(function (address,model) {
       return A2($Html.div,_U.list([$Html$Attributes.$class("row weapons")]),A2($List.map,weaponView(address),model.possibleWeapons));
    });
    var view = F2(function (address,model) {
-      return A2($Html.div,_U.list([$Html$Attributes.$class("row game")]),_U.list([header,A2(weaponsList,address,model),A2(playersList,address,model)]));
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("row game")]),
+      _U.list([header,A2(weaponsList,address,model),A2(playersList,address,model),A2(winnerView,address,model)]));
    });
-   var createWeapon = function (name) {    return {name: name};};
-   var initialModel = {possibleWeapons: _U.list([createWeapon("Rock"),createWeapon("Paper"),createWeapon("Scissors")]),players: _U.list([])};
-   var update = F2(function (action,model) {
-      var _p3 = action;
-      switch (_p3.ctor)
-      {case "NoOp": return model;
-         case "TestAction": return _U.update(model,{possibleWeapons: A2($List._op["::"],createWeapon(_p3._0),model.possibleWeapons)});
-         default: return _U.update(model,{players: _p3._0});}
-   });
-   var Player = F3(function (a,b,c) {    return {name: a,move: b,score: c};});
-   var Weapon = function (a) {    return {name: a};};
-   var Model = F2(function (a,b) {    return {possibleWeapons: a,players: b};});
+   var chooseWeaponPort = Elm.Native.Port.make(_elm).outboundSignal("chooseWeaponPort",function (v) {    return v;},chooseWeaponMailbox.signal);
    var inbox = $Signal.mailbox(NoOp);
-   var actions = $Signal.mergeMany(_U.list([inbox.signal,A2($Signal.map,TestAction,testPort),A2($Signal.map,PlayersChanged,playersPort)]));
+   var actions = $Signal.mergeMany(_U.list([inbox.signal
+                                           ,A2($Signal.map,TestAction,testPort)
+                                           ,A2($Signal.map,PlayersChanged,playersPort)
+                                           ,A2($Signal.map,WinnerFound,winnerFoundPort)]));
    var model = A3($Signal.foldp,update,initialModel,actions);
    var main = A2($Signal.map,view(inbox.address),model);
    return _elm.Jan.values = {_op: _op
                             ,main: main
                             ,inbox: inbox
+                            ,chooseWeaponMailbox: chooseWeaponMailbox
+                            ,newGameMailbox: newGameMailbox
                             ,Model: Model
                             ,Weapon: Weapon
                             ,Player: Player
@@ -104,9 +129,11 @@ Elm.Jan.make = function (_elm) {
                             ,header: header
                             ,weaponsList: weaponsList
                             ,playersList: playersList
+                            ,winnerView: winnerView
                             ,view: view
                             ,NoOp: NoOp
                             ,TestAction: TestAction
                             ,PlayersChanged: PlayersChanged
+                            ,WinnerFound: WinnerFound
                             ,update: update};
 };

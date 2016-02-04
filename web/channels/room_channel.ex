@@ -37,7 +37,8 @@ defmodule Jan.RoomChannel do
         broadcast! socket, "winner_found", %{"player_name" => player.name}
         send self, :players_changed
 
-      _ -> nil
+      _ ->
+        send self, :players_changed
     end
 
     {:noreply, socket}
@@ -46,8 +47,6 @@ defmodule Jan.RoomChannel do
   def handle_in("new_game", _, socket) do
     Jan.GameServer.reset_game(socket.assigns.pid)
     send self, :players_changed
-
-    broadcast! socket, "reset", %{}
 
     {:noreply, socket}
   end
