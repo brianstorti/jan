@@ -136,6 +136,10 @@ header : Html
 header =
   h1 [] [ text "Choose your weapon" ]
 
+invite =
+  div [class "invite"]
+      [ img [ src "/images/arrow.png" ] []]
+
 
 weaponsList : Address Action -> Model -> Html
 weaponsList address model =
@@ -169,6 +173,7 @@ view address model =
   div
     [ class "row game" ]
     [
+      invite,
       header,
       weaponsList address model,
       playersList address model,

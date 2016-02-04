@@ -94,18 +94,9 @@ $header-font-color: rgb(33,153,232);
     display: none;
   }
 
-  font-family: helvetica;
-  color: gray;
-  text-align: left;
   position: fixed;
   top: 1em;
   left: 3em;
-  width: 150px;
-
-  p {
-    padding-top: 10px;
-    line-height: 110%;
-  }
 }
 
 .score {

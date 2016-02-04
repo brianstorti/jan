@@ -57,6 +57,9 @@ Elm.Jan.make = function (_elm) {
    var ShowResult = function (a) {    return {ctor: "ShowResult",_0: a};};
    var PlayersChanged = function (a) {    return {ctor: "PlayersChanged",_0: a};};
    var NoOp = {ctor: "NoOp"};
+   var invite = A2($Html.div,
+   _U.list([$Html$Attributes.$class("invite")]),
+   _U.list([A2($Html.img,_U.list([$Html$Attributes.src("/images/arrow.png")]),_U.list([]))]));
    var header = A2($Html.h1,_U.list([]),_U.list([$Html.text("Choose your weapon")]));
    var playerWeaponView = F3(function (address,player,model) {
       var shouldHideIcon = $String.isEmpty(model.resultMessage) && ($String.isEmpty(player.move) || !_U.eq(player.name,model.currentPlayer));
@@ -112,7 +115,7 @@ Elm.Jan.make = function (_elm) {
    var view = F2(function (address,model) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("row game")]),
-      _U.list([header,A2(weaponsList,address,model),A2(playersList,address,model),A2(resultView,address,model)]));
+      _U.list([invite,header,A2(weaponsList,address,model),A2(playersList,address,model),A2(resultView,address,model)]));
    });
    var chooseWeaponPort = Elm.Native.Port.make(_elm).outboundSignal("chooseWeaponPort",function (v) {    return v;},chooseWeaponMailbox.signal);
    var inbox = $Signal.mailbox(NoOp);
@@ -139,6 +142,7 @@ Elm.Jan.make = function (_elm) {
                             ,playerWeaponView: playerWeaponView
                             ,playerView: playerView
                             ,header: header
+                            ,invite: invite
                             ,weaponsList: weaponsList
                             ,playersList: playersList
                             ,resultView: resultView
