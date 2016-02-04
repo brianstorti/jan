@@ -54,7 +54,6 @@ let handleSuccessfulJoin = function(response, channel, playerName) {
   });
 
   channel.on("reset", payload => {
-    console.log("reset");
     elmApp.ports.resetGamePort.send([]);
   });
 };

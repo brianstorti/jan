@@ -42,6 +42,6 @@ defmodule Jan.GameServerTest do
     GameServer.new_move(pid, "Brian", "rock")
     GameServer.reset_game(pid)
 
-    assert [%{name: "Brian", move: nil, score: 1}] == GameServer.get_players_list(pid)
+    assert [%{name: "Brian", move: "", score: 1}] == GameServer.get_players_list(pid)
   end
 end

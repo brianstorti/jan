@@ -20,13 +20,13 @@ defmodule Jan.RoomChannelTest do
   end
 
   test "broadcasts players list" do
-    assert_broadcast "players_changed", %{players: [%{name: "Brian", move: nil}]}
+    assert_broadcast "players_changed", %{players: [%{name: "Brian", move: ""}]}
   end
 
   test "adds new player" do
     subscribe_and_join(socket, RoomChannel, "rooms:foo", %{"player_name" => "Storti"})
-    assert_broadcast "players_changed", %{players: [%{name: "Storti", move: nil},
-                                                    %{name: "Brian", move: nil}]}
+    assert_broadcast "players_changed", %{players: [%{name: "Storti", move: ""},
+                                                    %{name: "Brian", move: ""}]}
   end
 
   test "registers new move", %{socket: socket} do
@@ -39,7 +39,7 @@ defmodule Jan.RoomChannelTest do
     push socket, "new_move", %{"move" => "rock"}
     push new_socket, "new_move", %{"move" => "paper"}
 
-    assert_broadcast "winner_found", %{"player_name" => "Storti"}
+    assert_broadcast "result_found", %{"message" => "Storti won!"}
   end
 
   test "broadcasts draw", %{socket: socket} do
@@ -47,7 +47,7 @@ defmodule Jan.RoomChannelTest do
     push socket, "new_move", %{"move" => "rock"}
     push new_socket, "new_move", %{"move" => "rock"}
 
-    assert_broadcast "draw", %{}
+    assert_broadcast "result_found", %{"message" => "It's a draw."}
   end
 
   test "starts a new game", %{socket: socket} do
@@ -55,13 +55,13 @@ defmodule Jan.RoomChannelTest do
     assert_broadcast "players_changed", %{players: [%{name: "Brian", move: "rock"}]}
 
     push socket, "new_game"
-    assert_broadcast "players_changed", %{players: [%{name: "Brian", move: nil}]}
+    assert_broadcast "players_changed", %{players: [%{name: "Brian", move: ""}]}
   end
 
   test "removes player when he/she leaves a room", %{socket: socket} do
     subscribe_and_join(socket, RoomChannel, "rooms:foo", %{"player_name" => "Storti"})
     push socket, "leave", %{}
-    assert_broadcast "players_changed", %{players: [%{name: "Storti", move: nil}]}
+    assert_broadcast "players_changed", %{players: [%{name: "Storti", move: ""}]}
   end
 
   test "creates new message", %{socket: socket} do
