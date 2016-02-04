@@ -19,7 +19,7 @@ defmodule Jan.RoomChannel do
 
   def handle_info(:players_changed, socket) do
     players = Jan.GameServer.get_players_list(socket.assigns.pid)
-    broadcast! socket, "players_changed", %{players: players}
+    broadcast! socket, "players_changed", %{players: Enum.reverse(players)}
 
     {:noreply, socket}
   end

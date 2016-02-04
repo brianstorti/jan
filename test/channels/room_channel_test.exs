@@ -25,8 +25,8 @@ defmodule Jan.RoomChannelTest do
 
   test "adds new player" do
     subscribe_and_join(socket, RoomChannel, "rooms:foo", %{"player_name" => "Storti"})
-    assert_broadcast "players_changed", %{players: [%{name: "Storti", move: ""},
-                                                    %{name: "Brian", move: ""}]}
+    assert_broadcast "players_changed", %{players: [%{name: "Brian", move: ""},
+                                                    %{name: "Storti", move: ""}]}
   end
 
   test "registers new move", %{socket: socket} do
