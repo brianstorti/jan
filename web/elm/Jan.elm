@@ -54,7 +54,6 @@ actions : Signal Action
 actions =
   Signal.mergeMany [inbox.signal,
                     (Signal.map PlayersChanged playersPort),
-                    (Signal.map ChooseWeapon chooseWeaponPort),
                     (Signal.map DefineCurrentPlayer currentPlayerPort),
                     (Signal.map (\_ -> ResetGame) resetGamePort),
                     (Signal.map ResultFound resultFoundPort)]
@@ -182,7 +181,6 @@ type Action
       = NoOp
       | PlayersChanged (List Player)
       | ResultFound String
-      | ChooseWeapon String
       | ResetGame
       | DefineCurrentPlayer String
 
@@ -198,18 +196,6 @@ update action model =
 
     DefineCurrentPlayer playerName ->
       { model | currentPlayer = playerName }
-
-    ChooseWeapon weapon ->
-      let
-        updateWeapon player =
-          if player.name == model.currentPlayer then
-             {player | move = weapon}
-          else
-            player
-
-        players = List.map updateWeapon model.players
-      in
-        { model | players = players }
 
     ResultFound message ->
       { model | resultMessage = message }
