@@ -31,7 +31,8 @@ type alias Model =
   {
     possibleWeapons : List Weapon,
     players : List Player,
-    resultMessage : String
+    resultMessage : String,
+    currentPlayer : String
   }
 
 
@@ -53,6 +54,8 @@ actions : Signal Action
 actions =
   Signal.mergeMany [inbox.signal,
                     (Signal.map PlayersChanged playersPort),
+                    (Signal.map ChooseWeapon chooseWeaponPort),
+                    (Signal.map DefineCurrentPlayer currentPlayerPort),
                     (Signal.map (\_ -> ResetGame) resetGamePort),
                     (Signal.map ResultFound resultFoundPort)]
 
@@ -77,7 +80,8 @@ initialModel =
       ],
 
     players = [],
-    resultMessage = ""
+    resultMessage = "",
+    currentPlayer = ""
   }
 
 
@@ -98,10 +102,14 @@ weaponView address weapon =
           ]
       ]
 
-playerWeaponView : Address Action -> Player -> Html
-playerWeaponView address player =
+playerWeaponView : Address Action -> Player -> Model -> Html
+playerWeaponView address player model =
   let
-      iconClassName = if String.isEmpty(player.move)
+      shouldHideIcon =
+        String.isEmpty(model.resultMessage) &&
+        (String.isEmpty(player.move) || player.name /= model.currentPlayer)
+
+      iconClassName = if shouldHideIcon
                          then "fa-question"
                          else "fa-hand-" ++ String.toLower(player.move) ++ "-o"
   in
@@ -114,12 +122,12 @@ playerWeaponView address player =
 
 
 
-playerView : Address Action -> Player -> Html
-playerView address player =
+playerView : Address Action -> Model -> Player -> Html
+playerView address model player =
   div
     [ class "large-4 medium-4 columns" ]
     [ div [ class "score round label"] [ text (toString player.score) ],
-      div [] [ playerWeaponView address player ]
+      div [] [ playerWeaponView address player model ]
     ]
 
 
@@ -139,7 +147,7 @@ playersList : Address Action -> Model -> Html
 playersList address model =
   div
     [ class "row players" ]
-    (List.map (playerView address) model.players)
+    (List.map (playerView address model) model.players)
 
 
 resultView : Address Action -> Model -> Html
@@ -174,7 +182,9 @@ type Action
       = NoOp
       | PlayersChanged (List Player)
       | ResultFound String
+      | ChooseWeapon String
       | ResetGame
+      | DefineCurrentPlayer String
 
 
 update : Action -> Model -> Model
@@ -185,6 +195,21 @@ update action model =
 
     PlayersChanged players ->
       { model | players = players }
+
+    DefineCurrentPlayer playerName ->
+      { model | currentPlayer = playerName }
+
+    ChooseWeapon weapon ->
+      let
+        updateWeapon player =
+          if player.name == model.currentPlayer then
+             {player | move = weapon}
+          else
+            player
+
+        players = List.map updateWeapon model.players
+      in
+        { model | players = players }
 
     ResultFound message ->
       { model | resultMessage = message }
@@ -198,6 +223,7 @@ update action model =
 
 port playersPort : Signal (List Player)
 port resultFoundPort : Signal String
+port currentPlayerPort : Signal String
 port resetGamePort : Signal ()
 
 port chooseWeaponPort : Signal String

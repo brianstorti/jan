@@ -18,7 +18,7 @@ let init = function() {
   let channel = socket.channel("rooms:" + roomName, { player_name: playerName });
 
   channel.join().receive("error", handleFailedJoin)
-                .receive("ok", response => { handleSuccessfulJoin(response, channel); });
+                .receive("ok", response => { handleSuccessfulJoin(response, channel, playerName); });
 
   window.onbeforeunload = function () {
     leave(channel);
@@ -26,10 +26,13 @@ let init = function() {
 
 };
 
-let handleSuccessfulJoin = function(response, channel) {
+let handleSuccessfulJoin = function(response, channel, playerName) {
   let elmApp = Elm.fullscreen(Elm.Jan, { playersPort: [],
                                          resultFoundPort: "",
+                                         currentPlayerPort: "",
                                          resetGamePort: []});
+
+  elmApp.ports.currentPlayerPort.send(playerName);
 
   $('.game').show();
   $('.name').hide();

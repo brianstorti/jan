@@ -38,7 +38,7 @@ defmodule Jan.RoomChannel do
         send self, :players_changed
 
       _ ->
-        send self, :players_changed
+        nil
     end
 
     {:noreply, socket}
