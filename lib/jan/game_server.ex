@@ -11,6 +11,7 @@ defmodule Jan.GameServer do
     case GenServer.call(pid, {:add_player, player_name}) do
       :ok -> :ok
       :duplicate -> {:error, "There is already a '#{player_name}' in this room"}
+      :empty -> {:error, "The name must be filled in"}
     end
   end
 
@@ -40,10 +41,15 @@ defmodule Jan.GameServer do
   end
 
   def handle_call({:add_player, player_name}, _from, state) do
-    if Enum.any?(state, &(String.downcase(&1.name) == String.downcase(player_name))) do
-      {:reply, :duplicate, state}
-    else
-      {:reply, :ok, [%{name: player_name, move: "", score: 0} | state]}
+    cond do
+      Enum.any?(state, &(String.downcase(&1.name) == String.downcase(player_name))) ->
+        {:reply, :duplicate, state}
+
+      String.strip(player_name) == "" ->
+        {:reply, :empty, state}
+
+      true ->
+        {:reply, :ok, [%{name: player_name, move: "", score: 0} | state]}
     end
   end
 
