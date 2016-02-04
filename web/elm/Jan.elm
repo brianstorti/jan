@@ -16,6 +16,7 @@ inbox : Signal.Mailbox Action
 inbox =
   Signal.mailbox NoOp
 
+
 chooseWeaponMailbox : Signal.Mailbox String
 chooseWeaponMailbox =
   Signal.mailbox ""
@@ -56,7 +57,7 @@ actions =
                     (Signal.map PlayersChanged playersPort),
                     (Signal.map DefineCurrentPlayer currentPlayerPort),
                     (Signal.map (\_ -> ResetGame) resetGamePort),
-                    (Signal.map ResultFound resultFoundPort)]
+                    (Signal.map ShowResult resultFoundPort)]
 
 
 model : Signal Model
@@ -87,15 +88,16 @@ initialModel =
 -- VIEW
 
 
-weaponView : Address Action -> Weapon -> Html
-weaponView address weapon =
+weaponView : Address Action -> Model -> Weapon -> Html
+weaponView address model weapon =
   let
     iconClassName = "fa-hand-" ++ String.toLower(weapon.name) ++ "-o"
+    disabledClass = if String.isEmpty(model.resultMessage) then "" else "-disabled"
   in
     div
       [ class "medium-4 columns" ]
       [ a
-          [ class "weapon-wrapper", onClick chooseWeaponMailbox.address (String.toLower weapon.name)]
+          [ class ("weapon-wrapper " ++ disabledClass), onClick chooseWeaponMailbox.address (String.toLower weapon.name)]
           [ i [ class ("weapon fa fa-5x " ++ iconClassName) ] [],
             p [ class "weapon-label" ] [ text weapon.name ]
           ]
@@ -139,7 +141,7 @@ weaponsList : Address Action -> Model -> Html
 weaponsList address model =
   div
     [ class "row weapons" ]
-    (List.map (weaponView address) model.possibleWeapons)
+    (List.map (weaponView address model) model.possibleWeapons)
 
 
 playersList : Address Action -> Model -> Html
@@ -180,7 +182,7 @@ view address model =
 type Action
       = NoOp
       | PlayersChanged (List Player)
-      | ResultFound String
+      | ShowResult String
       | ResetGame
       | DefineCurrentPlayer String
 
@@ -197,7 +199,7 @@ update action model =
     DefineCurrentPlayer playerName ->
       { model | currentPlayer = playerName }
 
-    ResultFound message ->
+    ShowResult message ->
       { model | resultMessage = message }
 
     ResetGame ->

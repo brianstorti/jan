@@ -49,12 +49,12 @@ Elm.Jan.make = function (_elm) {
       {case "NoOp": return model;
          case "PlayersChanged": return _U.update(model,{players: _p0._0});
          case "DefineCurrentPlayer": return _U.update(model,{currentPlayer: _p0._0});
-         case "ResultFound": return _U.update(model,{resultMessage: _p0._0});
+         case "ShowResult": return _U.update(model,{resultMessage: _p0._0});
          default: return _U.update(model,{resultMessage: ""});}
    });
    var DefineCurrentPlayer = function (a) {    return {ctor: "DefineCurrentPlayer",_0: a};};
    var ResetGame = {ctor: "ResetGame"};
-   var ResultFound = function (a) {    return {ctor: "ResultFound",_0: a};};
+   var ShowResult = function (a) {    return {ctor: "ShowResult",_0: a};};
    var PlayersChanged = function (a) {    return {ctor: "PlayersChanged",_0: a};};
    var NoOp = {ctor: "NoOp"};
    var header = A2($Html.h1,_U.list([]),_U.list([$Html.text("Choose your weapon")]));
@@ -95,17 +95,19 @@ Elm.Jan.make = function (_elm) {
    });
    var newGamePort = Elm.Native.Port.make(_elm).outboundSignal("newGamePort",function (v) {    return [];},newGameMailbox.signal);
    var chooseWeaponMailbox = $Signal.mailbox("");
-   var weaponView = F2(function (address,weapon) {
+   var weaponView = F3(function (address,model,weapon) {
+      var disabledClass = $String.isEmpty(model.resultMessage) ? "" : "-disabled";
       var iconClassName = A2($Basics._op["++"],"fa-hand-",A2($Basics._op["++"],$String.toLower(weapon.name),"-o"));
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("medium-4 columns")]),
       _U.list([A2($Html.a,
-      _U.list([$Html$Attributes.$class("weapon-wrapper"),A2($Html$Events.onClick,chooseWeaponMailbox.address,$String.toLower(weapon.name))]),
+      _U.list([$Html$Attributes.$class(A2($Basics._op["++"],"weapon-wrapper ",disabledClass))
+              ,A2($Html$Events.onClick,chooseWeaponMailbox.address,$String.toLower(weapon.name))]),
       _U.list([A2($Html.i,_U.list([$Html$Attributes.$class(A2($Basics._op["++"],"weapon fa fa-5x ",iconClassName))]),_U.list([]))
               ,A2($Html.p,_U.list([$Html$Attributes.$class("weapon-label")]),_U.list([$Html.text(weapon.name)]))]))]));
    });
    var weaponsList = F2(function (address,model) {
-      return A2($Html.div,_U.list([$Html$Attributes.$class("row weapons")]),A2($List.map,weaponView(address),model.possibleWeapons));
+      return A2($Html.div,_U.list([$Html$Attributes.$class("row weapons")]),A2($List.map,A2(weaponView,address,model),model.possibleWeapons));
    });
    var view = F2(function (address,model) {
       return A2($Html.div,
@@ -118,7 +120,7 @@ Elm.Jan.make = function (_elm) {
                                            ,A2($Signal.map,PlayersChanged,playersPort)
                                            ,A2($Signal.map,DefineCurrentPlayer,currentPlayerPort)
                                            ,A2($Signal.map,function (_p1) {    return ResetGame;},resetGamePort)
-                                           ,A2($Signal.map,ResultFound,resultFoundPort)]));
+                                           ,A2($Signal.map,ShowResult,resultFoundPort)]));
    var model = A3($Signal.foldp,update,initialModel,actions);
    var main = A2($Signal.map,view(inbox.address),model);
    return _elm.Jan.values = {_op: _op
@@ -143,7 +145,7 @@ Elm.Jan.make = function (_elm) {
                             ,view: view
                             ,NoOp: NoOp
                             ,PlayersChanged: PlayersChanged
-                            ,ResultFound: ResultFound
+                            ,ShowResult: ShowResult
                             ,ResetGame: ResetGame
                             ,DefineCurrentPlayer: DefineCurrentPlayer
                             ,update: update};
