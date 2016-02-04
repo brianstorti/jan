@@ -30,11 +30,11 @@ defmodule Jan.RoomChannel do
 
     case Jan.GameServer.new_move(pid, player_name, move) do
       :draw ->
-        broadcast! socket, "draw", %{}
+        broadcast! socket, "result_found", %{"message" => "It's a draw."}
         send self, :players_changed
 
       {:winner, player} ->
-        broadcast! socket, "winner_found", %{"player_name" => player.name}
+        broadcast! socket, "result_found", %{"message" => "#{player.name} won!"}
         send self, :players_changed
 
       _ ->

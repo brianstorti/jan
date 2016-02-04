@@ -31,7 +31,7 @@ type alias Model =
   {
     possibleWeapons : List Weapon,
     players : List Player,
-    winner : String
+    resultMessage : String
   }
 
 
@@ -52,9 +52,9 @@ type alias Player =
 actions : Signal Action
 actions =
   Signal.mergeMany [inbox.signal,
-                    (Signal.map TestAction testPort),
                     (Signal.map PlayersChanged playersPort),
-                    (Signal.map WinnerFound winnerFoundPort)]
+                    (Signal.map (\_ -> ResetGame) newGamePort),
+                    (Signal.map ResultFound resultFoundPort)]
 
 
 model : Signal Model
@@ -77,7 +77,7 @@ initialModel =
       ],
 
     players = [],
-    winner = ""
+    resultMessage = ""
   }
 
 
@@ -142,14 +142,14 @@ playersList address model =
     (List.map (playerView address) model.players)
 
 
-winnerView : Address Action -> Model -> Html
-winnerView address model =
-  if String.isEmpty(model.winner) then
+resultView : Address Action -> Model -> Html
+resultView address model =
+  if String.isEmpty(model.resultMessage) then
      div [] []
   else
     div [ class "row result-wrapper" ]
         [ h1 [ class "result" ]
-             [ text ("Winner found: " ++ model.winner) ],
+             [ text model.resultMessage ],
 
           a [ class "new-game button", onClick newGameMailbox.address () ]
             [ text "New Game" ] ]
@@ -163,7 +163,7 @@ view address model =
       header,
       weaponsList address model,
       playersList address model,
-      winnerView address model
+      resultView address model
     ]
 
 
@@ -172,10 +172,9 @@ view address model =
 
 type Action
       = NoOp
-      | TestAction String
       | PlayersChanged (List Player)
-      | WinnerFound String
-      -- | ResetGame
+      | ResultFound String
+      | ResetGame
 
 
 update : Action -> Model -> Model
@@ -184,22 +183,21 @@ update action model =
     NoOp ->
       model
 
-    TestAction value ->
-      { model | possibleWeapons = (createWeapon value) :: model.possibleWeapons }
-
     PlayersChanged players ->
       { model | players = players }
 
-    WinnerFound playerName ->
-      { model | winner = playerName }
+    ResultFound message ->
+      { model | resultMessage = message }
+
+    ResetGame ->
+      { model| resultMessage = "" }
 
 
 
 -- PORTS
 
-port testPort : Signal String
 port playersPort : Signal (List Player)
-port winnerFoundPort : Signal String
+port resultFoundPort : Signal String
 
 port chooseWeaponPort : Signal String
 port chooseWeaponPort =
