@@ -12,6 +12,6 @@ Elm.Repl.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var tsol = {ctor: "_Tuple0"};
-   var deltron3030 = $Basics.identity(1);
+   var deltron3030 = $List.length(_U.list([1]));
    return _elm.Repl.values = {_op: _op,deltron3030: deltron3030,tsol: tsol};
 };

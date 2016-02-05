@@ -10348,7 +10348,10 @@ Elm.Jan.make = function (_elm) {
    var invite = A2($Html.div,
    _U.list([$Html$Attributes.$class("invite")]),
    _U.list([A2($Html.img,_U.list([$Html$Attributes.src("/images/arrow.png")]),_U.list([]))]));
-   var header = A2($Html.h1,_U.list([]),_U.list([$Html.text("Choose your weapon")]));
+   var header = function (model) {
+      var headerText = _U.cmp($List.length(model.players),1) > 0 ? "Choose your weapon" : "Waiting for a second player";
+      return A2($Html.h1,_U.list([]),_U.list([$Html.text(headerText)]));
+   };
    var playerWeaponView = F3(function (address,player,model) {
       var shouldHideWeapon = $String.isEmpty(model.resultMessage) && ($String.isEmpty(player.move) || !_U.eq(player.name,model.currentPlayer));
       var iconClassName = shouldHideWeapon ? "fa-question" : A2($Basics._op["++"],"fa-hand-",A2($Basics._op["++"],$String.toLower(player.move),"-o"));
@@ -10388,7 +10391,8 @@ Elm.Jan.make = function (_elm) {
    var newGamePort = Elm.Native.Port.make(_elm).outboundSignal("newGamePort",function (v) {    return [];},newGameMailbox.signal);
    var chooseWeaponMailbox = $Signal.mailbox("");
    var weaponView = F3(function (address,model,weapon) {
-      var disabledClass = $String.isEmpty(model.resultMessage) ? "" : "-disabled";
+      var shouldDisable = $Basics.not($String.isEmpty(model.resultMessage)) || _U.cmp($List.length(model.players),2) < 0;
+      var disabledClass = shouldDisable ? "-disabled" : "";
       var iconClassName = A2($Basics._op["++"],"fa-hand-",A2($Basics._op["++"],$String.toLower(weapon.name),"-o"));
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("medium-4 columns")]),
@@ -10404,7 +10408,7 @@ Elm.Jan.make = function (_elm) {
    var view = F2(function (address,model) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("row game")]),
-      _U.list([invite,header,A2(weaponsList,address,model),A2(playersList,address,model),A2(resultView,address,model)]));
+      _U.list([invite,header(model),A2(weaponsList,address,model),A2(playersList,address,model),A2(resultView,address,model)]));
    });
    var chooseWeaponPort = Elm.Native.Port.make(_elm).outboundSignal("chooseWeaponPort",function (v) {    return v;},chooseWeaponMailbox.signal);
    var inbox = $Signal.mailbox(NoOp);

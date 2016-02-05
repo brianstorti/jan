@@ -92,7 +92,8 @@ weaponView : Address Action -> Model -> Weapon -> Html
 weaponView address model weapon =
   let
     iconClassName = "fa-hand-" ++ String.toLower(weapon.name) ++ "-o"
-    disabledClass = if String.isEmpty(model.resultMessage) then "" else "-disabled"
+    shouldDisable = not(String.isEmpty(model.resultMessage)) || List.length(model.players) < 2
+    disabledClass = if shouldDisable then "-disabled" else ""
   in
     div
       [ class "medium-4 columns" ]
@@ -134,9 +135,15 @@ playerView address model player =
     ]
 
 
-header : Html
-header =
-  h1 [] [ text "Choose your weapon" ]
+header : Model -> Html
+header model =
+  let
+    headerText = if List.length(model.players) > 1 then
+                   "Choose your weapon"
+                 else
+                   "Waiting for a second player"
+  in
+    h1 [] [ text headerText ]
 
 invite =
   div [class "invite"]
@@ -176,7 +183,7 @@ view address model =
     [ class "row game" ]
     [
       invite,
-      header,
+      header model,
       weaponsList address model,
       playersList address model,
       resultView address model
