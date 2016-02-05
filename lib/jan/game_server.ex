@@ -22,7 +22,7 @@ defmodule Jan.GameServer do
   def new_move(pid, player_name, move) do
     case GenServer.call(pid, {:new_move, player_name, move}) do
       {:winner, winner} ->
-        GenServer.cast(pid, {:compute_win, winner})
+        GenServer.cast(pid, {:increment_winner_score, winner})
         {:winner, winner}
       other_result -> other_result
     end
@@ -57,7 +57,7 @@ defmodule Jan.GameServer do
     {:noreply, Enum.filter(state, &(&1.name != player_name))}
   end
 
-  def handle_cast({:compute_win, winner}, state) do
+  def handle_cast({:increment_winner_score, winner}, state) do
     new_state = Enum.map(state, fn player ->
       if player.name == winner.name do
         player = %{player | score: player.score + 1}
@@ -111,7 +111,10 @@ defmodule Jan.GameServer do
   end
 
   defp beat_all?(move, players) do
-    this_beat_that = %{"rock" => "scissors", "paper" => "rock", "scissors" => "paper"}
+    this_beat_that = %{"rock" => "scissors",
+                       "paper" => "rock",
+                       "scissors" => "paper"}
+
     weapon_to_beat = Map.get(this_beat_that, move)
 
     Enum.all?(players, &(&1.move == weapon_to_beat))
