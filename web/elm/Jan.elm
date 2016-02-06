@@ -153,11 +153,11 @@ resultView address model =
   if String.isEmpty(model.resultMessage) then
      div [] []
   else
-    div [ class "row result-wrapper" ]
+    div [ class "row" ]
         [ h1 [ class "result" ]
              [ text model.resultMessage ],
 
-          a [ class "new-game button", onClick newGameMailbox.address () ]
+          a [ class "button", onClick newGameMailbox.address () ]
             [ text "New Game" ] ]
 
 
