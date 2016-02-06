@@ -1,0 +1,17 @@
+{
+    "version": "1.1.0",
+    "summary": "Reading and writing from the console in Node",
+    "repository": "https://github.com/laszlopandy/elm-console.git",
+    "license": "BSD3",
+    "source-directories": [
+        "src"
+    ],
+    "exposed-modules": [
+        "Console"
+    ],
+    "native-modules": true,
+    "dependencies": {
+        "elm-lang/core": "2.0.0 <= v < 4.0.0"
+    },
+    "elm-version": "0.15.0 <= v < 0.17.0"
+}

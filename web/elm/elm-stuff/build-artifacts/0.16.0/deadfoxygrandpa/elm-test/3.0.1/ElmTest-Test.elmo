@@ -1,0 +1,63 @@
+Elm.ElmTest = Elm.ElmTest || {};
+Elm.ElmTest.Test = Elm.ElmTest.Test || {};
+Elm.ElmTest.Test.make = function (_elm) {
+   "use strict";
+   _elm.ElmTest = _elm.ElmTest || {};
+   _elm.ElmTest.Test = _elm.ElmTest.Test || {};
+   if (_elm.ElmTest.Test.values) return _elm.ElmTest.Test.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $ElmTest$Assertion = Elm.ElmTest.Assertion.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var numberOfSuites = function (test) {
+      var _p0 = test;
+      if (_p0.ctor === "TestCase") {
+            return 0;
+         } else {
+            return 1 + function (_p1) {
+               return $List.sum(A2($List.map,numberOfSuites,_p1));
+            }(_p0._1);
+         }
+   };
+   var numberOfTests = function (test) {
+      var _p2 = test;
+      if (_p2.ctor === "TestCase") {
+            return 1;
+         } else {
+            return function (_p3) {
+               return $List.sum(A2($List.map,numberOfTests,_p3));
+            }(_p2._1);
+         }
+   };
+   var nameOf = function (test) {    var _p4 = test;if (_p4.ctor === "TestCase") {    return _p4._0;} else {    return _p4._0;}};
+   var Suite = F2(function (a,b) {    return {ctor: "Suite",_0: a,_1: b};});
+   var suite = Suite;
+   var TestCase = F2(function (a,b) {    return {ctor: "TestCase",_0: a,_1: b};});
+   var test = F2(function (name,a) {    return A2(TestCase,name,a);});
+   var defaultTest = function (a) {
+      var name = function () {
+         var _p5 = a;
+         switch (_p5.ctor)
+         {case "AssertTrue": return "True";
+            case "AssertFalse": return "False";
+            case "AssertEqual": return A2($Basics._op["++"],_p5._1,A2($Basics._op["++"]," == ",_p5._2));
+            default: return A2($Basics._op["++"],_p5._1,A2($Basics._op["++"]," /= ",_p5._2));}
+      }();
+      return A2(test,name,a);
+   };
+   var equals = F2(function (a,b) {    return defaultTest(A2($ElmTest$Assertion.assertEqual,a,b));});
+   return _elm.ElmTest.Test.values = {_op: _op
+                                     ,test: test
+                                     ,equals: equals
+                                     ,defaultTest: defaultTest
+                                     ,suite: suite
+                                     ,numberOfTests: numberOfTests
+                                     ,numberOfSuites: numberOfSuites
+                                     ,TestCase: TestCase
+                                     ,Suite: Suite};
+};

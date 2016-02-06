@@ -1,0 +1,46 @@
+Elm.ElmTest = Elm.ElmTest || {};
+Elm.ElmTest.make = function (_elm) {
+   "use strict";
+   _elm.ElmTest = _elm.ElmTest || {};
+   if (_elm.ElmTest.values) return _elm.ElmTest.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Console = Elm.Console.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $ElmTest$Assertion = Elm.ElmTest.Assertion.make(_elm),
+   $ElmTest$Runner$Console = Elm.ElmTest.Runner.Console.make(_elm),
+   $ElmTest$Runner$Element = Elm.ElmTest.Runner.Element.make(_elm),
+   $ElmTest$Runner$String = Elm.ElmTest.Runner.String.make(_elm),
+   $ElmTest$Test = Elm.ElmTest.Test.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var stringRunner = $ElmTest$Runner$String.runDisplay;
+   var consoleRunner = $ElmTest$Runner$Console.runDisplay;
+   var elementRunner = $ElmTest$Runner$Element.runDisplay;
+   var assertionList = $ElmTest$Assertion.assertionList;
+   var lazyAssert = $ElmTest$Assertion.assertT;
+   var assertNotEqual = $ElmTest$Assertion.assertNotEqual;
+   var assertEqual = $ElmTest$Assertion.assertEqual;
+   var assert = $ElmTest$Assertion.assert;
+   var suite = $ElmTest$Test.suite;
+   var equals = $ElmTest$Test.equals;
+   var defaultTest = $ElmTest$Test.defaultTest;
+   var test = $ElmTest$Test.test;
+   return _elm.ElmTest.values = {_op: _op
+                                ,test: test
+                                ,defaultTest: defaultTest
+                                ,equals: equals
+                                ,suite: suite
+                                ,assert: assert
+                                ,assertEqual: assertEqual
+                                ,assertNotEqual: assertNotEqual
+                                ,lazyAssert: lazyAssert
+                                ,assertionList: assertionList
+                                ,elementRunner: elementRunner
+                                ,consoleRunner: consoleRunner
+                                ,stringRunner: stringRunner};
+};

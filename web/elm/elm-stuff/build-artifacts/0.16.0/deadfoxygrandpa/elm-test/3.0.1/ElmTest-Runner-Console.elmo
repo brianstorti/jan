@@ -1,0 +1,44 @@
+Elm.ElmTest = Elm.ElmTest || {};
+Elm.ElmTest.Runner = Elm.ElmTest.Runner || {};
+Elm.ElmTest.Runner.Console = Elm.ElmTest.Runner.Console || {};
+Elm.ElmTest.Runner.Console.make = function (_elm) {
+   "use strict";
+   _elm.ElmTest = _elm.ElmTest || {};
+   _elm.ElmTest.Runner = _elm.ElmTest.Runner || {};
+   _elm.ElmTest.Runner.Console = _elm.ElmTest.Runner.Console || {};
+   if (_elm.ElmTest.Runner.Console.values) return _elm.ElmTest.Runner.Console.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Console = Elm.Console.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $ElmTest$Run = Elm.ElmTest.Run.make(_elm),
+   $ElmTest$Runner$String = Elm.ElmTest.Runner.String.make(_elm),
+   $ElmTest$Test = Elm.ElmTest.Test.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm);
+   var _op = {};
+   var runDisplay = function (tests) {
+      var _p0 = $ElmTest$Runner$String.run(tests);
+      if (_p0.ctor === "::" && _p0._0.ctor === "_Tuple2") {
+            var out = A2($Basics._op["++"],
+            _p0._0._0,
+            A2($Basics._op["++"],"\n\n",function (_p1) {    return $String.concat(A2($List.intersperse,"\n",A2($List.map,$Basics.fst,_p1)));}(_p0._1)));
+            return A2($Console._op[">>>"],
+            $Console.putStrLn(out),
+            function () {
+               var _p2 = $ElmTest$Run.pass(_p0._0._1);
+               if (_p2 === true) {
+                     return $Console.exit(0);
+                  } else {
+                     return $Console.exit(1);
+                  }
+            }());
+         } else {
+            return $Console.exit(1);
+         }
+   };
+   return _elm.ElmTest.Runner.Console.values = {_op: _op,runDisplay: runDisplay};
+};

@@ -1,0 +1,59 @@
+Elm.Console = Elm.Console || {};
+Elm.Console.make = function (_elm) {
+   "use strict";
+   _elm.Console = _elm.Console || {};
+   if (_elm.Console.values) return _elm.Console.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Console$Core = Elm.Console.Core.make(_elm),
+   $Console$Runner = Elm.Console.Runner.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var run = $Console$Runner.run;
+   var forever = $Console$Core.forever;
+   _op[">>>"] = $Console$Core.seq;
+   var sequenceMany = $Console$Core.sequenceMany;
+   var seq = $Console$Core.seq;
+   _op[">>="] = $Console$Core.andThen;
+   var andThen = $Console$Core.andThen;
+   _op["<*>"] = $Console$Core.apply;
+   var apply = $Console$Core.apply;
+   var pure = $Console$Core.pure;
+   var forEach = $Console$Core.forEach;
+   var mapIO = $Console$Core.mapIO;
+   var map2 = $Console$Core.map2;
+   var map = $Console$Core.map;
+   var getLine = $Console$Core.getLine;
+   var writeFile = $Console$Core.writeFile;
+   var readUntil = $Console$Core.readUntil;
+   var putStrLn = $Console$Core.putStrLn;
+   var putStr = $Console$Core.putStr;
+   var exit = $Console$Core.exit;
+   var getChar = $Console$Core.getChar;
+   var putChar = $Console$Core.putChar;
+   return _elm.Console.values = {_op: _op
+                                ,putChar: putChar
+                                ,putStr: putStr
+                                ,putStrLn: putStrLn
+                                ,getChar: getChar
+                                ,getLine: getLine
+                                ,readUntil: readUntil
+                                ,writeFile: writeFile
+                                ,exit: exit
+                                ,map: map
+                                ,map2: map2
+                                ,mapIO: mapIO
+                                ,forEach: forEach
+                                ,pure: pure
+                                ,apply: apply
+                                ,andThen: andThen
+                                ,seq: seq
+                                ,sequenceMany: sequenceMany
+                                ,forever: forever
+                                ,run: run};
+};

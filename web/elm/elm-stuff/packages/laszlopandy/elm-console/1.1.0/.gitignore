@@ -1,0 +1,9 @@
+*~
+elm-stuff
+dist/
+hello.js
+*.elmi
+*.elmo
+node_modules/
+test/build/
+test/Test.txt
