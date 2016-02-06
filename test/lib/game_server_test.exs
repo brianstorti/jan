@@ -14,6 +14,27 @@ defmodule Jan.GameServerTest do
     assert [] == GameServer.get_players_list(pid)
   end
 
+  test "handles duplicated name" do
+    {:ok, pid} = GameServer.start_link
+
+    assert :ok == GameServer.add_player(pid, "Brian")
+    assert {:error, "There is already a 'Brian' in this room"} ==  GameServer.add_player(pid, "Brian")
+  end
+
+  test "handles empty name" do
+    {:ok, pid} = GameServer.start_link
+
+    assert {:error, "The name must be filled in"} ==  GameServer.add_player(pid, "")
+  end
+
+  test "can't join a game if it already started" do
+    {:ok, pid} = GameServer.start_link
+    GameServer.add_player(pid, "Brian")
+    GameServer.choose_weapon(pid, "Brian", "rock")
+
+    assert {:error, "There's a game being played in this room already"} ==  GameServer.add_player(pid, "Storti")
+  end
+
   test "registers new weapon" do
     {:ok, pid} = GameServer.start_link
     GameServer.add_player(pid, "Brian")

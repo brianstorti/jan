@@ -12,6 +12,7 @@ defmodule Jan.GameServer do
       :ok -> :ok
       :duplicate -> {:error, "There is already a '#{player_name}' in this room"}
       :empty -> {:error, "The name must be filled in"}
+      :game_already_started -> {:error, "There's a game being played in this room already"}
     end
   end
 
@@ -47,6 +48,9 @@ defmodule Jan.GameServer do
 
       String.strip(player_name) == "" ->
         {:reply, :empty, state}
+
+      Enum.any?(state, &(&1.weapon != "")) ->
+        {:reply, :game_already_started, state}
 
       true ->
         {:reply, :ok, [%{name: player_name, weapon: "", score: 0} | state]}
