@@ -1,4 +1,10 @@
 defmodule Jan.GameServer do
+  @moduledoc """
+  This module is responsible for managing a single game room.
+
+  Its state is the list of players in this single game, with their scores and weapons.
+  """
+
   use GenServer
 
   alias Jan.Player
@@ -7,6 +13,12 @@ defmodule Jan.GameServer do
     GenServer.start_link(__MODULE__, [])
   end
 
+  @doc """
+  Adds a player to the game with the given `player_name`.
+  Players start with a `score` of 0 and an empty `weapon`
+
+  Returns `:ok` or `{:error, message}`
+  """
   def add_player(pid, player_name) do
     case GenServer.call(pid, {:add_player, player_name}) do
       :ok -> :ok
@@ -20,6 +32,11 @@ defmodule Jan.GameServer do
     GenServer.cast(pid, {:remove_player, player_name})
   end
 
+  @doc """
+  Finds the user with the given `player_name` and sets its `weapon`.
+  If all the users have played already, it will try to find the winner,
+  and can return `{:winner, player_name}` or simply `:draw`.
+  """
   def choose_weapon(pid, player_name, weapon) do
     case GenServer.call(pid, {:choose_weapon, player_name, weapon}) do
       {:winner, winner} ->
@@ -29,10 +46,17 @@ defmodule Jan.GameServer do
     end
   end
 
+  @doc """
+  Resets the game by settings all the users' weapons to empty String.
+  """
   def reset_game(pid) do
     GenServer.cast(pid, :reset_game)
   end
 
+  @doc """
+  Returns the list of all the players that are in this game, with their
+  score and weapon.
+  """
   def get_players_list(pid) do
     GenServer.call(pid, :players_list)
   end
@@ -112,6 +136,12 @@ defmodule Jan.GameServer do
     end
   end
 
+  @doc """
+  Returns `true` if given `weapon` beats the weapons of all the other `players`.
+
+  This is useful when we want to support more than 2 players, meaning that for
+  any number of player, one is the winner if its weapon beats all the others'.
+  """
   defp beat_all?(weapon, players) do
     this_beat_that = %{"rock" => "scissors",
                        "paper" => "rock",

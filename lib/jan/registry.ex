@@ -1,4 +1,14 @@
 defmodule Jan.Registry do
+  @moduledoc """
+  This module is responsible for storing and retrieving a process for a given room.
+
+  We have a process for each room, and use the room id to identify them.
+  When a new room is created, we add a new entry in this `Map`, using the room id
+  as the key and the pid as a value.
+
+  These processes are supervised by the `Jan.GameSupervisor` module.
+  """
+
   use GenServer
 
   # API
