@@ -83,7 +83,8 @@ weaponView address model weapon =
       [ class "medium-4 columns" ]
       [ a
           [ class ("weapon-wrapper " ++ disabledClass), onClick chooseWeaponMailbox.address (String.toLower weapon)]
-          [ i [ class ("weapon fa fa-5x " ++ iconClassName) ] [],
+          [
+            i [ class ("weapon fa fa-5x " ++ iconClassName) ] [],
             p [ class "weapon-label" ] [ text weapon ]
           ]
       ]
@@ -105,7 +106,8 @@ playerWeaponView address player model =
   in
      a
        [ class "weapon-wrapper -disabled" ]
-       [ p [ class "weapon-label" ] [ text player.name ],
+       [
+         p [ class "weapon-label" ] [ text player.name ],
          i [ class ("weapon fa fa-5x " ++ iconClassName) ] [],
          p [ class "weapon-label" ] [ text weaponDescription ]
        ]
@@ -115,8 +117,9 @@ playerWeaponView address player model =
 playerView : Address Action -> Model -> Player -> Html
 playerView address model player =
   div
-    [ class "large-4 medium-4 columns" ]
-    [ span [ class "label"] [ text ("Score: " ++ (toString player.score)) ],
+    [ class "medium-4 columns" ]
+    [
+      span [ class "label"] [ text ("Score: " ++ (toString player.score)) ],
       div [] [ playerWeaponView address player model ]
     ]
 
@@ -156,11 +159,13 @@ resultView address model =
      div [] []
   else
     div [ class "row" ]
-        [ h1 [ class "result" ]
+        [
+          h1 [ class "result" ]
              [ text model.resultMessage ],
 
           a [ class "button", onClick newGameMailbox.address () ]
-            [ text "New Game" ] ]
+            [ text "New Game" ]
+        ]
 
 
 view : Address Action -> Model -> Html

@@ -75,10 +75,7 @@ defmodule Jan.GameServer do
 
   def handle_cast({:increment_winner_score, winner}, state) do
     new_state = Enum.map(state, fn player ->
-      if player.name == winner.name do
-        player = %{player | score: player.score + 1}
-      end
-
+      if player.name == winner.name, do: player = %{player | score: player.score + 1}
       player
     end)
 
@@ -107,10 +104,7 @@ defmodule Jan.GameServer do
 
   def handle_call({:choose_weapon, player_name, weapon}, _from, state) do
     new_state = Enum.map(state, fn player ->
-      if player.name == player_name do
-        player = %{player | weapon: weapon}
-      end
-
+      if player.name == player_name, do: player = %{player | weapon: weapon}
       player
     end)
 
@@ -119,21 +113,14 @@ defmodule Jan.GameServer do
 
   defp answer_for(players) do
     all_players_moved = players |> Enum.map(&(&1.weapon)) |> Enum.all?(&(&1 != ""))
-
-    if all_players_moved do
-      find_winner(players)
-    end
+    if all_players_moved, do: find_winner(players)
   end
 
   defp find_winner(players) do
     is_winner = fn current -> beat_all?(current.weapon, List.delete(players, current)) end
     winner = Enum.find(players, is_winner)
 
-    if winner do
-      {:winner, winner}
-    else
-      :draw
-    end
+    if winner, do: {:winner, winner}, else: :draw
   end
 
   @doc """

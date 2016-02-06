@@ -80,7 +80,7 @@ Elm.Jan.make = function (_elm) {
    });
    var playerView = F3(function (address,model,player) {
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("large-4 medium-4 columns")]),
+      _U.list([$Html$Attributes.$class("medium-4 columns")]),
       _U.list([A2($Html.span,_U.list([$Html$Attributes.$class("label")]),_U.list([$Html.text(A2($Basics._op["++"],"Score: ",$Basics.toString(player.score)))]))
               ,A2($Html.div,_U.list([]),_U.list([A3(playerWeaponView,address,player,model)]))]));
    });
