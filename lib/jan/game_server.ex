@@ -7,8 +7,6 @@ defmodule Jan.GameServer do
 
   use GenServer
 
-  alias Jan.Player
-
   def start_link do
     GenServer.start_link(__MODULE__, [])
   end
@@ -61,8 +59,30 @@ defmodule Jan.GameServer do
     GenServer.call(pid, :players_list)
   end
 
+  ## SERVER
+
   def init(_) do
     {:ok, []}
+  end
+
+  def handle_cast({:remove_player, player_name}, state) do
+    {:noreply, Enum.filter(state, &(&1.name != player_name))}
+  end
+
+  def handle_cast(:reset_game, state) do
+    {:noreply, Enum.map(state, &(%{&1 | weapon: ""}))}
+  end
+
+  def handle_cast({:increment_winner_score, winner}, state) do
+    new_state = Enum.map(state, fn player ->
+      if player.name == winner.name do
+        player = %{player | score: player.score + 1}
+      end
+
+      player
+    end)
+
+    {:noreply, new_state}
   end
 
   def handle_call({:add_player, player_name}, _from, state) do
@@ -81,22 +101,6 @@ defmodule Jan.GameServer do
     end
   end
 
-  def handle_cast({:remove_player, player_name}, state) do
-    {:noreply, Enum.filter(state, &(&1.name != player_name))}
-  end
-
-  def handle_cast({:increment_winner_score, winner}, state) do
-    new_state = Enum.map(state, fn player ->
-      if player.name == winner.name do
-        player = %{player | score: player.score + 1}
-      end
-
-      player
-    end)
-
-    {:noreply, new_state}
-  end
-
   def handle_call(:players_list, _from, state) do
     {:reply, state, state}
   end
@@ -111,10 +115,6 @@ defmodule Jan.GameServer do
     end)
 
     {:reply, answer_for(new_state), new_state}
-  end
-
-  def handle_cast(:reset_game, state) do
-    {:noreply, Enum.map(state, &(%{&1 | weapon: ""}))}
   end
 
   defp answer_for(players) do
