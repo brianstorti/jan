@@ -94,8 +94,6 @@ defmodule Jan.GameServer do
 
     if all_players_moved do
       find_winner(players)
-    else
-      :continue
     end
   end
 
