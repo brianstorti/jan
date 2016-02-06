@@ -3,7 +3,10 @@ import {Socket} from "phoenix";
 let socket = new Socket("/socket");
 
 document.addEventListener('DOMContentLoaded', function() {
-  $('.player-name').off("keypress").on("keypress", e => {
+  let playerName = document.getElementsByClassName('player-name')[0];
+  if (!playerName) return;
+
+  playerName.addEventListener("keypress", e => {
     if (e.keyCode == 13) {
       init();
     }
@@ -13,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
 let init = function() {
   socket.connect();
 
-  let roomName = $('.room-name').val();
-  let playerName = $('.player-name').val();
+  let roomName = document.getElementsByClassName('room-name')[0].value;
+  let playerName = document.getElementsByClassName('player-name')[0].value;
   let channel = socket.channel("rooms:" + roomName, { player_name: playerName });
 
   channel.join().receive("error", handleFailedJoin)
@@ -34,8 +37,8 @@ let handleSuccessfulJoin = function(response, channel, playerName) {
 
   elmApp.ports.currentPlayerPort.send(playerName);
 
-  $('.game').show();
-  $('.name').hide();
+  document.getElementsByClassName('game')[0].style.display = 'block';
+  document.getElementsByClassName('name')[0].style.display = 'none';
 
   elmApp.ports.chooseWeaponPort.subscribe(function (weapon) {
     channel.push("new_move", { move: weapon});
@@ -59,8 +62,8 @@ let handleSuccessfulJoin = function(response, channel, playerName) {
 };
 
 let handleFailedJoin = function(response) {
-  $('.error-message').html(response);
-  $('.error-message').show();
+  document.getElementsByClassName('error-message')[0].style.display = 'block';
+  document.getElementsByClassName('error-message')[0].innerHTML = response;
 };
 
 let leave = function (channel) {
