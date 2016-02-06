@@ -45,7 +45,7 @@ let handleSuccessfulJoin = function(response, channel, playerName) {
   });
 
   elmApp.ports.newGamePort.subscribe(function () {
-    channel.push("new_game");
+    channel.push("start_new_game");
   });
 
   channel.on("players_changed", payload => {
@@ -56,7 +56,7 @@ let handleSuccessfulJoin = function(response, channel, playerName) {
     elmApp.ports.resultFoundPort.send(payload.message);
   });
 
-  channel.on("reset", payload => {
+  channel.on("reset_game", payload => {
     elmApp.ports.resetGamePort.send([]);
   });
 };

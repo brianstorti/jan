@@ -54,8 +54,9 @@ defmodule Jan.RoomChannelTest do
     push socket, "choose_weapon", %{"weapon" => "rock"}
     assert_broadcast "players_changed", %{players: [%{name: "Brian", weapon: "rock"}]}
 
-    push socket, "new_game"
+    push socket, "start_new_game"
     assert_broadcast "players_changed", %{players: [%{name: "Brian", weapon: ""}]}
+    assert_broadcast "reset_game", %{}
   end
 
   test "removes player when he/she leaves a room", %{socket: socket} do

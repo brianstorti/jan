@@ -29,11 +29,11 @@ defmodule Jan.RoomChannel do
     player_name = socket.assigns.player_name
 
     case Jan.GameServer.choose_weapon(pid, player_name, weapon) do
-      :draw ->
-        broadcast! socket, "result_found", %{"message" => "It's a draw."}
-
       {:winner, player} ->
         broadcast! socket, "result_found", %{"message" => "#{player.name} won!"}
+
+      :draw ->
+        broadcast! socket, "result_found", %{"message" => "It's a draw."}
 
       _ -> nil
     end
@@ -43,10 +43,10 @@ defmodule Jan.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("new_game", _, socket) do
+  def handle_in("start_new_game", _, socket) do
     Jan.GameServer.reset_game(socket.assigns.pid)
     send self, :players_changed
-    broadcast!  socket, "reset", %{}
+    broadcast!  socket, "reset_game", %{}
 
     {:noreply, socket}
   end
