@@ -19,8 +19,8 @@ defmodule Jan.GameServer do
     GenServer.cast(pid, {:remove_player, player_name})
   end
 
-  def new_move(pid, player_name, weapon) do
-    case GenServer.call(pid, {:new_move, player_name, weapon}) do
+  def choose_weapon(pid, player_name, weapon) do
+    case GenServer.call(pid, {:choose_weapon, player_name, weapon}) do
       {:winner, winner} ->
         GenServer.cast(pid, {:increment_winner_score, winner})
         {:winner, winner}
@@ -73,7 +73,7 @@ defmodule Jan.GameServer do
     {:reply, state, state}
   end
 
-  def handle_call({:new_move, player_name, weapon}, _from, state) do
+  def handle_call({:choose_weapon, player_name, weapon}, _from, state) do
     new_state = Enum.map(state, fn player ->
       if player.name == player_name do
         player = %{player | weapon: weapon}

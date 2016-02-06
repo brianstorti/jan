@@ -20,48 +20,48 @@ defmodule Jan.RoomChannelTest do
   end
 
   test "broadcasts players list" do
-    assert_broadcast "players_changed", %{players: [%{name: "Brian", move: ""}]}
+    assert_broadcast "players_changed", %{players: [%{name: "Brian", weapon: ""}]}
   end
 
   test "adds new player" do
     subscribe_and_join(socket, RoomChannel, "rooms:foo", %{"player_name" => "Storti"})
-    assert_broadcast "players_changed", %{players: [%{name: "Brian", move: ""},
-                                                    %{name: "Storti", move: ""}]}
+    assert_broadcast "players_changed", %{players: [%{name: "Brian", weapon: ""},
+                                                    %{name: "Storti", weapon: ""}]}
   end
 
-  test "registers new move", %{socket: socket} do
-    push socket, "new_move", %{"move" => "rock"}
-    assert_broadcast "players_changed", %{players: [%{name: "Brian", move: "rock"}]}
+  test "registers new weapon", %{socket: socket} do
+    push socket, "choose_weapon", %{"weapon" => "rock"}
+    assert_broadcast "players_changed", %{players: [%{name: "Brian", weapon: "rock"}]}
   end
 
   test "broadcasts winner", %{socket: socket} do
     {:ok, _, new_socket} = subscribe_and_join(socket, RoomChannel, "rooms:foo", %{"player_name" => "Storti"})
-    push socket, "new_move", %{"move" => "rock"}
-    push new_socket, "new_move", %{"move" => "paper"}
+    push socket, "choose_weapon", %{"weapon" => "rock"}
+    push new_socket, "choose_weapon", %{"weapon" => "paper"}
 
     assert_broadcast "result_found", %{"message" => "Storti won!"}
   end
 
   test "broadcasts draw", %{socket: socket} do
     {:ok, _, new_socket} = subscribe_and_join(socket, RoomChannel, "rooms:foo", %{"player_name" => "Storti"})
-    push socket, "new_move", %{"move" => "rock"}
-    push new_socket, "new_move", %{"move" => "rock"}
+    push socket, "choose_weapon", %{"weapon" => "rock"}
+    push new_socket, "choose_weapon", %{"weapon" => "rock"}
 
     assert_broadcast "result_found", %{"message" => "It's a draw."}
   end
 
   test "starts a new game", %{socket: socket} do
-    push socket, "new_move", %{"move" => "rock"}
-    assert_broadcast "players_changed", %{players: [%{name: "Brian", move: "rock"}]}
+    push socket, "choose_weapon", %{"weapon" => "rock"}
+    assert_broadcast "players_changed", %{players: [%{name: "Brian", weapon: "rock"}]}
 
     push socket, "new_game"
-    assert_broadcast "players_changed", %{players: [%{name: "Brian", move: ""}]}
+    assert_broadcast "players_changed", %{players: [%{name: "Brian", weapon: ""}]}
   end
 
   test "removes player when he/she leaves a room", %{socket: socket} do
     subscribe_and_join(socket, RoomChannel, "rooms:foo", %{"player_name" => "Storti"})
     push socket, "leave", %{}
-    assert_broadcast "players_changed", %{players: [%{name: "Storti", move: ""}]}
+    assert_broadcast "players_changed", %{players: [%{name: "Storti", weapon: ""}]}
   end
 
   test "creates new message", %{socket: socket} do
