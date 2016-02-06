@@ -24,11 +24,11 @@ defmodule Jan.RoomChannel do
     {:noreply, socket}
   end
 
-  def handle_in("new_move", %{"move" => move}, socket) do
+  def handle_in("new_move", %{"weapon" => weapon}, socket) do
     pid = socket.assigns.pid
     player_name = socket.assigns.player_name
 
-    case Jan.GameServer.new_move(pid, player_name, move) do
+    case Jan.GameServer.new_move(pid, player_name, weapon) do
       :draw ->
         broadcast! socket, "result_found", %{"message" => "It's a draw."}
         send self, :players_changed

@@ -30,23 +30,17 @@ newGameMailbox =
 
 type alias Model =
   {
-    possibleWeapons : List Weapon,
+    possibleWeapons : List String,
     players : List Player,
     resultMessage : String,
     currentPlayer : String
   }
 
 
-type alias Weapon =
-  {
-    name : String
-  }
-
-
 type alias Player =
   {
     name : String,
-    move : String,
+    weapon : String,
     score: Int
   }
 
@@ -65,20 +59,10 @@ model =
   Signal.foldp update initialModel actions
 
 
-createWeapon : String -> Weapon
-createWeapon name =
-  { name = name }
-
-
 initialModel : Model
 initialModel =
   {
-    possibleWeapons =
-      [ createWeapon "Rock",
-        createWeapon "Paper",
-        createWeapon "Scissors"
-      ],
-
+    possibleWeapons = ["Rock", "Paper", "Scissors"],
     players = [],
     resultMessage = "",
     currentPlayer = ""
@@ -88,19 +72,19 @@ initialModel =
 -- VIEW
 
 
-weaponView : Address Action -> Model -> Weapon -> Html
+weaponView : Address Action -> Model -> String -> Html
 weaponView address model weapon =
   let
-    iconClassName = "fa-hand-" ++ String.toLower(weapon.name) ++ "-o"
+    iconClassName = "fa-hand-" ++ String.toLower(weapon) ++ "-o"
     shouldDisable = not(String.isEmpty(model.resultMessage)) || List.length(model.players) < 2
     disabledClass = if shouldDisable then "-disabled" else ""
   in
     div
       [ class "medium-4 columns" ]
       [ a
-          [ class ("weapon-wrapper " ++ disabledClass), onClick chooseWeaponMailbox.address (String.toLower weapon.name)]
+          [ class ("weapon-wrapper " ++ disabledClass), onClick chooseWeaponMailbox.address (String.toLower weapon)]
           [ i [ class ("weapon fa fa-5x " ++ iconClassName) ] [],
-            p [ class "weapon-label" ] [ text weapon.name ]
+            p [ class "weapon-label" ] [ text weapon ]
           ]
       ]
 
@@ -109,13 +93,13 @@ playerWeaponView address player model =
   let
       shouldHideWeapon =
         String.isEmpty(model.resultMessage) &&
-        (String.isEmpty(player.move) || player.name /= model.currentPlayer)
+        (String.isEmpty(player.weapon) || player.name /= model.currentPlayer)
 
       iconClassName = if shouldHideWeapon
                          then "fa-question"
-                         else "fa-hand-" ++ String.toLower(player.move) ++ "-o"
+                         else "fa-hand-" ++ String.toLower(player.weapon) ++ "-o"
 
-      weaponDescription = if shouldHideWeapon then "..." else player.move
+      weaponDescription = if shouldHideWeapon then "..." else player.weapon
   in
      a
        [ class "weapon-wrapper -disabled" ]

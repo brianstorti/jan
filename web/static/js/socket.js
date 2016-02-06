@@ -41,7 +41,7 @@ let handleSuccessfulJoin = function(response, channel, playerName) {
   document.getElementsByClassName('name')[0].style.display = 'none';
 
   elmApp.ports.chooseWeaponPort.subscribe(function (weapon) {
-    channel.push("new_move", { move: weapon});
+    channel.push("new_move", { weapon: weapon});
   });
 
   elmApp.ports.newGamePort.subscribe(function () {

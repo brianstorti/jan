@@ -19,8 +19,8 @@ defmodule Jan.GameServer do
     GenServer.cast(pid, {:remove_player, player_name})
   end
 
-  def new_move(pid, player_name, move) do
-    case GenServer.call(pid, {:new_move, player_name, move}) do
+  def new_move(pid, player_name, weapon) do
+    case GenServer.call(pid, {:new_move, player_name, weapon}) do
       {:winner, winner} ->
         GenServer.cast(pid, {:increment_winner_score, winner})
         {:winner, winner}
@@ -49,7 +49,7 @@ defmodule Jan.GameServer do
         {:reply, :empty, state}
 
       true ->
-        {:reply, :ok, [%{name: player_name, move: "", score: 0} | state]}
+        {:reply, :ok, [%{name: player_name, weapon: "", score: 0} | state]}
     end
   end
 
@@ -73,10 +73,10 @@ defmodule Jan.GameServer do
     {:reply, state, state}
   end
 
-  def handle_call({:new_move, player_name, move}, _from, state) do
+  def handle_call({:new_move, player_name, weapon}, _from, state) do
     new_state = Enum.map(state, fn player ->
       if player.name == player_name do
-        player = %{player | move: move}
+        player = %{player | weapon: weapon}
       end
 
       player
@@ -86,11 +86,11 @@ defmodule Jan.GameServer do
   end
 
   def handle_cast(:reset_game, state) do
-    {:noreply, Enum.map(state, &(%{&1 | move: ""}))}
+    {:noreply, Enum.map(state, &(%{&1 | weapon: ""}))}
   end
 
   defp answer_for(players) do
-    all_players_moved = players |> Enum.map(&(&1.move)) |> Enum.all?(&(&1 != ""))
+    all_players_moved = players |> Enum.map(&(&1.weapon)) |> Enum.all?(&(&1 != ""))
 
     if all_players_moved do
       find_winner(players)
@@ -100,7 +100,7 @@ defmodule Jan.GameServer do
   end
 
   defp find_winner(players) do
-    is_winner = fn current -> beat_all?(current.move, List.delete(players, current)) end
+    is_winner = fn current -> beat_all?(current.weapon, List.delete(players, current)) end
     winner = Enum.find(players, is_winner)
 
     if winner do
@@ -110,13 +110,13 @@ defmodule Jan.GameServer do
     end
   end
 
-  defp beat_all?(move, players) do
+  defp beat_all?(weapon, players) do
     this_beat_that = %{"rock" => "scissors",
                        "paper" => "rock",
                        "scissors" => "paper"}
 
-    weapon_to_beat = Map.get(this_beat_that, move)
+    weapon_to_beat = Map.get(this_beat_that, weapon)
 
-    Enum.all?(players, &(&1.move == weapon_to_beat))
+    Enum.all?(players, &(&1.weapon == weapon_to_beat))
   end
 end
