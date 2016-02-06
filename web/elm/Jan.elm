@@ -91,9 +91,11 @@ weaponView address model weapon =
 playerWeaponView : Address Action -> Player -> Model -> Html
 playerWeaponView address player model =
   let
-      shouldHideWeapon =
-        String.isEmpty(model.resultMessage) &&
-        (String.isEmpty(player.weapon) || player.name /= model.currentPlayer)
+      gameNotFinished = String.isEmpty(model.resultMessage)
+      noWeaponSelected = String.isEmpty(player.weapon)
+      weaponForThisPlayer = player.name /= model.currentPlayer
+
+      shouldHideWeapon = gameNotFinished && (noWeaponSelected || weaponForThisPlayer)
 
       iconClassName = if shouldHideWeapon
                          then "fa-question"
@@ -114,7 +116,7 @@ playerView : Address Action -> Model -> Player -> Html
 playerView address model player =
   div
     [ class "large-4 medium-4 columns" ]
-    [ div [ class "score round label"] [ text (toString player.score) ],
+    [ span [ class "label"] [ text ("Score: " ++ (toString player.score)) ],
       div [] [ playerWeaponView address player model ]
     ]
 

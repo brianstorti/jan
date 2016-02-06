@@ -10354,7 +10354,10 @@ Elm.Jan.make = function (_elm) {
       return A2($Html.h1,_U.list([]),_U.list([$Html.text(headerText)]));
    };
    var playerWeaponView = F3(function (address,player,model) {
-      var shouldHideWeapon = $String.isEmpty(model.resultMessage) && ($String.isEmpty(player.weapon) || !_U.eq(player.name,model.currentPlayer));
+      var weaponForThisPlayer = !_U.eq(player.name,model.currentPlayer);
+      var noWeaponSelected = $String.isEmpty(player.weapon);
+      var gameNotFinished = $String.isEmpty(model.resultMessage);
+      var shouldHideWeapon = gameNotFinished && (noWeaponSelected || weaponForThisPlayer);
       var iconClassName = shouldHideWeapon ? "fa-question" : A2($Basics._op["++"],"fa-hand-",A2($Basics._op["++"],$String.toLower(player.weapon),"-o"));
       var weaponDescription = shouldHideWeapon ? "..." : player.weapon;
       return A2($Html.a,
@@ -10366,7 +10369,7 @@ Elm.Jan.make = function (_elm) {
    var playerView = F3(function (address,model,player) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("large-4 medium-4 columns")]),
-      _U.list([A2($Html.div,_U.list([$Html$Attributes.$class("score round label")]),_U.list([$Html.text($Basics.toString(player.score))]))
+      _U.list([A2($Html.span,_U.list([$Html$Attributes.$class("label")]),_U.list([$Html.text(A2($Basics._op["++"],"Score: ",$Basics.toString(player.score)))]))
               ,A2($Html.div,_U.list([]),_U.list([A3(playerWeaponView,address,player,model)]))]));
    });
    var playersList = F2(function (address,model) {
