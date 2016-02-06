@@ -147,8 +147,8 @@ defmodule Jan.GameServer do
                        "paper" => "rock",
                        "scissors" => "paper"}
 
-    weapon_to_beat = Map.get(this_beat_that, weapon)
+    weapon_that_i_beat = Map.get(this_beat_that, weapon)
 
-    Enum.all?(players, &(&1.weapon == weapon_to_beat))
+    Enum.all?(players, &(&1.weapon == weapon_that_i_beat))
   end
 end
