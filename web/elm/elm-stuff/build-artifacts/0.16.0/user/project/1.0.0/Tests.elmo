@@ -7,6 +7,7 @@ Elm.Tests.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $ElmTest = Elm.ElmTest.make(_elm),
+   $Jan = Elm.Jan.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -17,6 +18,7 @@ Elm.Tests.make = function (_elm) {
    "A Test Suite",
    _U.list([A2($ElmTest.test,"Addition",A2($ElmTest.assertEqual,3 + 7,10))
            ,A2($ElmTest.test,"String.left",A2($ElmTest.assertEqual,"a",A2($String.left,1,"abcdefg")))
-           ,A2($ElmTest.test,"This test should fail",$ElmTest.assert(true))]));
+           ,A2($ElmTest.test,"This test should fail",$ElmTest.assert(true))
+           ,A2($ElmTest.test,"Creates weapons",A2($ElmTest.assertEqual,{name: "rock"},$Jan.createWeapon("rock")))]));
    return _elm.Tests.values = {_op: _op,all: all};
 };
