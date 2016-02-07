@@ -76,7 +76,7 @@ weaponView : Address Action -> Model -> String -> Html
 weaponView address model weapon =
   let
     iconClassName = "fa-hand-" ++ String.toLower(weapon) ++ "-o"
-    shouldDisable = not(String.isEmpty(model.resultMessage)) || List.length(model.players) < 2
+    shouldDisable = (not << String.isEmpty <| model.resultMessage) || List.length(model.players) < 2
     disabledClass = if shouldDisable then "-disabled" else ""
   in
     div

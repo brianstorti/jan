@@ -102,7 +102,7 @@ Elm.Jan.make = function (_elm) {
    var newGamePort = Elm.Native.Port.make(_elm).outboundSignal("newGamePort",function (v) {    return [];},newGameMailbox.signal);
    var chooseWeaponMailbox = $Signal.mailbox("");
    var weaponView = F3(function (address,model,weapon) {
-      var shouldDisable = $Basics.not($String.isEmpty(model.resultMessage)) || _U.cmp($List.length(model.players),2) < 0;
+      var shouldDisable = function (_p1) {    return $Basics.not($String.isEmpty(_p1));}(model.resultMessage) || _U.cmp($List.length(model.players),2) < 0;
       var disabledClass = shouldDisable ? "-disabled" : "";
       var iconClassName = A2($Basics._op["++"],"fa-hand-",A2($Basics._op["++"],$String.toLower(weapon),"-o"));
       return A2($Html.div,
@@ -126,7 +126,7 @@ Elm.Jan.make = function (_elm) {
    var actions = $Signal.mergeMany(_U.list([inbox.signal
                                            ,A2($Signal.map,PlayersChanged,playersPort)
                                            ,A2($Signal.map,DefineCurrentPlayer,currentPlayerPort)
-                                           ,A2($Signal.map,function (_p1) {    return ResetGame;},resetGamePort)
+                                           ,A2($Signal.map,function (_p2) {    return ResetGame;},resetGamePort)
                                            ,A2($Signal.map,ShowResult,resultFoundPort)]));
    var model = A3($Signal.foldp,update,initialModel,actions);
    var main = A2($Signal.map,view(inbox.address),model);
