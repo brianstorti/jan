@@ -1,0 +1,8 @@
+{
+  "name": "Jan",
+  "repository": "https://github.com/brianstorti/jan",
+  "env": {
+    "ELM_COMPILE": "",
+    "ELM_PACKAGE_INSTALL": ""
+  }
+}
