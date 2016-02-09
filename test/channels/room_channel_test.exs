@@ -60,9 +60,9 @@ defmodule Jan.RoomChannelTest do
   end
 
   test "removes player when he/she leaves a room", %{socket: socket} do
-    subscribe_and_join(socket, RoomChannel, "rooms:foo", %{"player_name" => "Storti"})
-    push socket, "leave", %{}
-    assert_broadcast "players_changed", %{players: [%{name: "Storti", weapon: ""}]}
+    {:ok, _, new_socket} = subscribe_and_join(socket, RoomChannel, "rooms:foo", %{"player_name" => "Storti"})
+    push new_socket, "leave", %{}
+    assert_broadcast "players_changed", %{players: [%{name: "Brian", weapon: ""}]}
   end
 
   test "creates new message", %{socket: socket} do
