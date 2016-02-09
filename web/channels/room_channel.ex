@@ -6,6 +6,7 @@ defmodule Jan.RoomChannel do
     socket = socket
               |> assign(:pid, pid)
               |> assign(:player_name, player_name)
+              |> assign(:room_id, room_id)
 
     case Jan.GameServer.add_player(pid, player_name) do
       :ok ->
@@ -61,7 +62,15 @@ defmodule Jan.RoomChannel do
     player_name = socket.assigns.player_name
 
     Jan.GameServer.remove_player(pid, player_name)
-    broadcast! socket, "players_changed", %{players: Jan.GameServer.get_players_list(pid)}
+
+    case Jan.GameServer.get_players_list(pid) do
+      [] ->
+        Jan.Registry.unregister(socket.assigns.room_id)
+
+      _ ->
+        broadcast! socket, "players_changed", %{players: Jan.GameServer.get_players_list(pid)}
+    end
+
 
     {:stop, :normal, :ok, socket}
   end
