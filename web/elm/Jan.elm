@@ -139,6 +139,13 @@ invite =
       [ img [ src "/images/arrow.png" ] []]
 
 
+githubView =
+  div [ class "github" ]
+      [ a [ href "https://github.com/brianstorti/jan", target "blank" ]
+          [ i [ class "fa fa-3x fa-github" ] [] ]
+      ]
+
+
 weaponsList : Address Action -> Model -> Html
 weaponsList address model =
   div
@@ -174,6 +181,7 @@ view address model =
     [ class "row game" ]
     [
       invite,
+      githubView,
       header model,
       weaponsList address model,
       playersList address model,

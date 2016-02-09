@@ -10346,6 +10346,11 @@ Elm.Jan.make = function (_elm) {
    var ShowResult = function (a) {    return {ctor: "ShowResult",_0: a};};
    var PlayersChanged = function (a) {    return {ctor: "PlayersChanged",_0: a};};
    var NoOp = {ctor: "NoOp"};
+   var githubView = A2($Html.div,
+   _U.list([$Html$Attributes.$class("github")]),
+   _U.list([A2($Html.a,
+   _U.list([$Html$Attributes.href("https://github.com/brianstorti/jan"),$Html$Attributes.target("blank")]),
+   _U.list([A2($Html.i,_U.list([$Html$Attributes.$class("fa fa-3x fa-github")]),_U.list([]))]))]));
    var invite = A2($Html.div,
    _U.list([$Html$Attributes.$class("invite")]),
    _U.list([A2($Html.img,_U.list([$Html$Attributes.src("/images/arrow.png")]),_U.list([]))]));
@@ -10407,7 +10412,7 @@ Elm.Jan.make = function (_elm) {
    var view = F2(function (address,model) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("row game")]),
-      _U.list([invite,header(model),A2(weaponsList,address,model),A2(playersList,address,model),A2(resultView,address,model)]));
+      _U.list([invite,githubView,header(model),A2(weaponsList,address,model),A2(playersList,address,model),A2(resultView,address,model)]));
    });
    var chooseWeaponPort = Elm.Native.Port.make(_elm).outboundSignal("chooseWeaponPort",function (v) {    return v;},chooseWeaponMailbox.signal);
    var inbox = $Signal.mailbox(NoOp);
@@ -10433,6 +10438,7 @@ Elm.Jan.make = function (_elm) {
                             ,playerView: playerView
                             ,header: header
                             ,invite: invite
+                            ,githubView: githubView
                             ,weaponsList: weaponsList
                             ,playersList: playersList
                             ,resultView: resultView
