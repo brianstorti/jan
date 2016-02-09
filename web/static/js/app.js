@@ -24,6 +24,6 @@ let roomName = document.getElementsByClassName('room-name')[0];
 roomName.addEventListener("keypress", e => {
   if (e.keyCode == 13) {
     let roomName = document.getElementsByClassName('room-name')[0].value;
-    window.location = `/${roomName}`;
+    window.location = `/rooms/${roomName}`;
   }
 });

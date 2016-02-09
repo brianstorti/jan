@@ -9,14 +9,11 @@ defmodule Jan.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
   scope "/", Jan do
     pipe_through :browser
 
     get "/", RoomController, :new
-    get "/:id", RoomController, :show
+    get "/rooms/:id", RoomController, :show
+    get "/admin", AdminController, :index
   end
 end

@@ -28,6 +28,11 @@ defmodule Jan.Registry do
     GenServer.cast(:process_registry, {:unregister, room_id})
   end
 
+  def registered_rooms do
+    map = GenServer.call(:process_registry, :registered_rooms)
+    Map.keys(map)
+  end
+
   # SERVER
 
   def init(_) do
@@ -44,6 +49,10 @@ defmodule Jan.Registry do
   def handle_call({:register, room_id}, _from, state) do
     {:ok, pid} = Jan.GameSupervisor.start_game
     {:reply, pid, Map.put(state, room_id, pid)}
+  end
+
+  def handle_call(:registered_rooms, _from, state) do
+    {:reply, state, state}
   end
 
   def handle_cast({:unregister, room_id}, state) do

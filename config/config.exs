@@ -27,3 +27,8 @@ import_config "#{Mix.env}.exs"
 config :phoenix, :generators,
   migration: true,
   binary_id: false
+
+
+config :jan,
+  admin_user: System.get_env("ADMIN_USER"),
+  admin_password: System.get_env("ADMIN_PASS")

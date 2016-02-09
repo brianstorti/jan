@@ -1,0 +1,7 @@
+Rooms currently active (<%= Enum.count(@rooms) %>):
+
+<ul>
+  <%= for room <- @rooms do  %>
+    <li><%= room %></li>
+  <% end %>
+</ul>
