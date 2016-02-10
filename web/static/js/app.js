@@ -23,7 +23,7 @@ import socket from "./socket";
 let roomName = document.getElementsByClassName('room-name')[0];
 roomName.addEventListener("keypress", e => {
   if (e.keyCode == 13) {
-    let roomName = document.getElementsByClassName('room-name')[0].value;
-    window.location = `/rooms/${roomName}`;
+    let roomName = document.querySelector('.room-name').value;
+    if(roomName) window.location = `/rooms/${roomName}`;
   }
 });

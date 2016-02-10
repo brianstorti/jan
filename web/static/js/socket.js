@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
 let init = function() {
   socket.connect();
 
-  let roomName = document.getElementsByClassName('room-name')[0].value;
-  let playerName = document.getElementsByClassName('player-name')[0].value;
+  let roomName = document.querySelector('.room-name').value;
+  let playerName = document.querySelector('.player-name').value;
   let channel = socket.channel("rooms:" + roomName, { player_name: playerName });
 
   channel.join().receive("error", handleFailedJoin)
@@ -37,8 +37,8 @@ let handleSuccessfulJoin = function(response, channel, playerName) {
 
   elmApp.ports.currentPlayerPort.send(playerName);
 
-  document.getElementsByClassName('game')[0].style.display = 'block';
-  document.getElementsByClassName('name')[0].style.display = 'none';
+  document.querySelector('.game').style.display = 'block';
+  document.querySelector('.name').style.display = 'none';
 
   elmApp.ports.chooseWeaponPort.subscribe(function (weapon) {
     channel.push("choose_weapon", { weapon: weapon});
@@ -62,8 +62,8 @@ let handleSuccessfulJoin = function(response, channel, playerName) {
 };
 
 let handleFailedJoin = function(response) {
-  document.getElementsByClassName('error-message')[0].style.display = 'block';
-  document.getElementsByClassName('error-message')[0].innerHTML = response;
+  document.querySelector('.error-message').style.display = 'block';
+  document.querySelector('.error-message').innerHTML = response;
 };
 
 let leave = function (channel) {
