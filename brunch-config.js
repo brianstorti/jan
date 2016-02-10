@@ -41,7 +41,11 @@ exports.config = {
     watched: [
       "web/static",
       "test/static",
-      "web/elm/Jan.elm"
+      "web/elm/Jan.elm",
+      "web/elm/View.elm",
+      "web/elm/Action.elm",
+      "web/elm/Model.elm",
+      "web/elm/Mailbox.elm",
     ],
 
     // Where to compile files to

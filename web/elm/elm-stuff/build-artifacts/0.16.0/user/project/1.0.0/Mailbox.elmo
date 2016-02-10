@@ -1,0 +1,19 @@
+Elm.Mailbox = Elm.Mailbox || {};
+Elm.Mailbox.make = function (_elm) {
+   "use strict";
+   _elm.Mailbox = _elm.Mailbox || {};
+   if (_elm.Mailbox.values) return _elm.Mailbox.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Action = Elm.Action.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var newGameMailbox = $Signal.mailbox({ctor: "_Tuple0"});
+   var chooseWeaponMailbox = $Signal.mailbox("");
+   var inbox = $Signal.mailbox($Action.NoOp);
+   return _elm.Mailbox.values = {_op: _op,inbox: inbox,chooseWeaponMailbox: chooseWeaponMailbox,newGameMailbox: newGameMailbox};
+};

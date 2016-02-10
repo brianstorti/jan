@@ -10286,66 +10286,96 @@ Elm.Html.Events.make = function (_elm) {
                                     ,keyCode: keyCode
                                     ,Options: Options};
 };
-Elm.Jan = Elm.Jan || {};
-Elm.Jan.make = function (_elm) {
+Elm.Model = Elm.Model || {};
+Elm.Model.make = function (_elm) {
    "use strict";
-   _elm.Jan = _elm.Jan || {};
-   if (_elm.Jan.values) return _elm.Jan.values;
+   _elm.Model = _elm.Model || {};
+   if (_elm.Model.values) return _elm.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var Player = F3(function (a,b,c) {    return {name: a,weapon: b,score: c};});
+   var Model = F4(function (a,b,c,d) {    return {possibleWeapons: a,players: b,resultMessage: c,currentPlayer: d};});
+   return _elm.Model.values = {_op: _op,Model: Model,Player: Player};
+};
+Elm.Action = Elm.Action || {};
+Elm.Action.make = function (_elm) {
+   "use strict";
+   _elm.Action = _elm.Action || {};
+   if (_elm.Action.values) return _elm.Action.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var DefineCurrentPlayer = function (a) {    return {ctor: "DefineCurrentPlayer",_0: a};};
+   var ResetGame = {ctor: "ResetGame"};
+   var ShowResult = function (a) {    return {ctor: "ShowResult",_0: a};};
+   var PlayersChanged = function (a) {    return {ctor: "PlayersChanged",_0: a};};
+   var NoOp = {ctor: "NoOp"};
+   return _elm.Action.values = {_op: _op
+                               ,NoOp: NoOp
+                               ,PlayersChanged: PlayersChanged
+                               ,ShowResult: ShowResult
+                               ,ResetGame: ResetGame
+                               ,DefineCurrentPlayer: DefineCurrentPlayer};
+};
+Elm.Mailbox = Elm.Mailbox || {};
+Elm.Mailbox.make = function (_elm) {
+   "use strict";
+   _elm.Mailbox = _elm.Mailbox || {};
+   if (_elm.Mailbox.values) return _elm.Mailbox.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Action = Elm.Action.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var newGameMailbox = $Signal.mailbox({ctor: "_Tuple0"});
+   var chooseWeaponMailbox = $Signal.mailbox("");
+   var inbox = $Signal.mailbox($Action.NoOp);
+   return _elm.Mailbox.values = {_op: _op,inbox: inbox,chooseWeaponMailbox: chooseWeaponMailbox,newGameMailbox: newGameMailbox};
+};
+Elm.View = Elm.View || {};
+Elm.View.make = function (_elm) {
+   "use strict";
+   _elm.View = _elm.View || {};
+   if (_elm.View.values) return _elm.View.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Action = Elm.Action.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
+   $Mailbox = Elm.Mailbox.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm);
    var _op = {};
-   var resetGamePort = Elm.Native.Port.make(_elm).inboundSignal("resetGamePort",
-   "()",
-   function (v) {
-      return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple0"} : _U.badPort("an array",v);
+   var resultView = F2(function (address,model) {
+      return $String.isEmpty(model.resultMessage) ? A2($Html.div,_U.list([]),_U.list([])) : A2($Html.div,
+      _U.list([$Html$Attributes.$class("row")]),
+      _U.list([A2($Html.h1,_U.list([$Html$Attributes.$class("result")]),_U.list([$Html.text(model.resultMessage)]))
+              ,A2($Html.a,
+              _U.list([$Html$Attributes.$class("button"),A2($Html$Events.onClick,$Mailbox.newGameMailbox.address,{ctor: "_Tuple0"})]),
+              _U.list([$Html.text("New Game")]))]));
    });
-   var currentPlayerPort = Elm.Native.Port.make(_elm).inboundSignal("currentPlayerPort",
-   "String",
-   function (v) {
-      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",v);
-   });
-   var resultFoundPort = Elm.Native.Port.make(_elm).inboundSignal("resultFoundPort",
-   "String",
-   function (v) {
-      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",v);
-   });
-   var playersPort = Elm.Native.Port.make(_elm).inboundSignal("playersPort",
-   "List Jan.Player",
-   function (v) {
-      return typeof v === "object" && v instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.map(function (v) {
-         return typeof v === "object" && "name" in v && "weapon" in v && "score" in v ? {_: {}
-                                                                                        ,name: typeof v.name === "string" || typeof v.name === "object" && v.name instanceof String ? v.name : _U.badPort("a string",
-                                                                                        v.name)
-                                                                                        ,weapon: typeof v.weapon === "string" || typeof v.weapon === "object" && v.weapon instanceof String ? v.weapon : _U.badPort("a string",
-                                                                                        v.weapon)
-                                                                                        ,score: typeof v.score === "number" && isFinite(v.score) && Math.floor(v.score) === v.score ? v.score : _U.badPort("an integer",
-                                                                                        v.score)} : _U.badPort("an object with fields `name`, `weapon`, `score`",
-         v);
-      })) : _U.badPort("an array",v);
-   });
-   var update = F2(function (action,model) {
-      var _p0 = action;
-      switch (_p0.ctor)
-      {case "NoOp": return model;
-         case "PlayersChanged": return _U.update(model,{players: _p0._0});
-         case "DefineCurrentPlayer": return _U.update(model,{currentPlayer: _p0._0});
-         case "ShowResult": return _U.update(model,{resultMessage: _p0._0});
-         default: return _U.update(model,{resultMessage: ""});}
-   });
-   var DefineCurrentPlayer = function (a) {    return {ctor: "DefineCurrentPlayer",_0: a};};
-   var ResetGame = {ctor: "ResetGame"};
-   var ShowResult = function (a) {    return {ctor: "ShowResult",_0: a};};
-   var PlayersChanged = function (a) {    return {ctor: "PlayersChanged",_0: a};};
-   var NoOp = {ctor: "NoOp"};
    var githubView = A2($Html.div,
    _U.list([$Html$Attributes.$class("github")]),
    _U.list([A2($Html.a,
@@ -10380,29 +10410,15 @@ Elm.Jan.make = function (_elm) {
    var playersList = F2(function (address,model) {
       return A2($Html.div,_U.list([$Html$Attributes.$class("row players")]),A2($List.map,A2(playerView,address,model),model.players));
    });
-   var initialModel = {possibleWeapons: _U.list(["Rock","Paper","Scissors"]),players: _U.list([]),resultMessage: "",currentPlayer: ""};
-   var Player = F3(function (a,b,c) {    return {name: a,weapon: b,score: c};});
-   var Model = F4(function (a,b,c,d) {    return {possibleWeapons: a,players: b,resultMessage: c,currentPlayer: d};});
-   var newGameMailbox = $Signal.mailbox({ctor: "_Tuple0"});
-   var resultView = F2(function (address,model) {
-      return $String.isEmpty(model.resultMessage) ? A2($Html.div,_U.list([]),_U.list([])) : A2($Html.div,
-      _U.list([$Html$Attributes.$class("row")]),
-      _U.list([A2($Html.h1,_U.list([$Html$Attributes.$class("result")]),_U.list([$Html.text(model.resultMessage)]))
-              ,A2($Html.a,
-              _U.list([$Html$Attributes.$class("button"),A2($Html$Events.onClick,newGameMailbox.address,{ctor: "_Tuple0"})]),
-              _U.list([$Html.text("New Game")]))]));
-   });
-   var newGamePort = Elm.Native.Port.make(_elm).outboundSignal("newGamePort",function (v) {    return [];},newGameMailbox.signal);
-   var chooseWeaponMailbox = $Signal.mailbox("");
    var weaponView = F3(function (address,model,weapon) {
-      var shouldDisable = function (_p1) {    return $Basics.not($String.isEmpty(_p1));}(model.resultMessage) || _U.cmp($List.length(model.players),2) < 0;
+      var shouldDisable = function (_p0) {    return $Basics.not($String.isEmpty(_p0));}(model.resultMessage) || _U.cmp($List.length(model.players),2) < 0;
       var disabledClass = shouldDisable ? "-disabled" : "";
       var iconClassName = A2($Basics._op["++"],"fa-hand-",A2($Basics._op["++"],$String.toLower(weapon),"-o"));
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("medium-4 columns")]),
       _U.list([A2($Html.a,
       _U.list([$Html$Attributes.$class(A2($Basics._op["++"],"weapon-wrapper ",disabledClass))
-              ,A2($Html$Events.onClick,chooseWeaponMailbox.address,$String.toLower(weapon))]),
+              ,A2($Html$Events.onClick,$Mailbox.chooseWeaponMailbox.address,$String.toLower(weapon))]),
       _U.list([A2($Html.i,_U.list([$Html$Attributes.$class(A2($Basics._op["++"],"weapon fa fa-5x ",iconClassName))]),_U.list([]))
               ,A2($Html.p,_U.list([$Html$Attributes.$class("weapon-label")]),_U.list([$Html.text(weapon)]))]))]));
    });
@@ -10414,39 +10430,83 @@ Elm.Jan.make = function (_elm) {
       _U.list([$Html$Attributes.$class("row game")]),
       _U.list([invite,githubView,header(model),A2(weaponsList,address,model),A2(playersList,address,model),A2(resultView,address,model)]));
    });
-   var chooseWeaponPort = Elm.Native.Port.make(_elm).outboundSignal("chooseWeaponPort",function (v) {    return v;},chooseWeaponMailbox.signal);
-   var inbox = $Signal.mailbox(NoOp);
-   var actions = $Signal.mergeMany(_U.list([inbox.signal
-                                           ,A2($Signal.map,PlayersChanged,playersPort)
-                                           ,A2($Signal.map,DefineCurrentPlayer,currentPlayerPort)
-                                           ,A2($Signal.map,function (_p2) {    return ResetGame;},resetGamePort)
-                                           ,A2($Signal.map,ShowResult,resultFoundPort)]));
+   return _elm.View.values = {_op: _op
+                             ,weaponView: weaponView
+                             ,playerWeaponView: playerWeaponView
+                             ,playerView: playerView
+                             ,header: header
+                             ,invite: invite
+                             ,githubView: githubView
+                             ,weaponsList: weaponsList
+                             ,playersList: playersList
+                             ,resultView: resultView
+                             ,view: view};
+};
+Elm.Jan = Elm.Jan || {};
+Elm.Jan.make = function (_elm) {
+   "use strict";
+   _elm.Jan = _elm.Jan || {};
+   if (_elm.Jan.values) return _elm.Jan.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Action = Elm.Action.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Mailbox = Elm.Mailbox.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $View = Elm.View.make(_elm);
+   var _op = {};
+   var newGamePort = Elm.Native.Port.make(_elm).outboundSignal("newGamePort",function (v) {    return [];},$Mailbox.newGameMailbox.signal);
+   var chooseWeaponPort = Elm.Native.Port.make(_elm).outboundSignal("chooseWeaponPort",function (v) {    return v;},$Mailbox.chooseWeaponMailbox.signal);
+   var resetGamePort = Elm.Native.Port.make(_elm).inboundSignal("resetGamePort",
+   "()",
+   function (v) {
+      return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple0"} : _U.badPort("an array",v);
+   });
+   var currentPlayerPort = Elm.Native.Port.make(_elm).inboundSignal("currentPlayerPort",
+   "String",
+   function (v) {
+      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",v);
+   });
+   var resultFoundPort = Elm.Native.Port.make(_elm).inboundSignal("resultFoundPort",
+   "String",
+   function (v) {
+      return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _U.badPort("a string",v);
+   });
+   var playersPort = Elm.Native.Port.make(_elm).inboundSignal("playersPort",
+   "List Model.Player",
+   function (v) {
+      return typeof v === "object" && v instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.map(function (v) {
+         return typeof v === "object" && "name" in v && "weapon" in v && "score" in v ? {_: {}
+                                                                                        ,name: typeof v.name === "string" || typeof v.name === "object" && v.name instanceof String ? v.name : _U.badPort("a string",
+                                                                                        v.name)
+                                                                                        ,weapon: typeof v.weapon === "string" || typeof v.weapon === "object" && v.weapon instanceof String ? v.weapon : _U.badPort("a string",
+                                                                                        v.weapon)
+                                                                                        ,score: typeof v.score === "number" && isFinite(v.score) && Math.floor(v.score) === v.score ? v.score : _U.badPort("an integer",
+                                                                                        v.score)} : _U.badPort("an object with fields `name`, `weapon`, `score`",
+         v);
+      })) : _U.badPort("an array",v);
+   });
+   var update = F2(function (action,model) {
+      var _p0 = action;
+      switch (_p0.ctor)
+      {case "NoOp": return model;
+         case "PlayersChanged": return _U.update(model,{players: _p0._0});
+         case "DefineCurrentPlayer": return _U.update(model,{currentPlayer: _p0._0});
+         case "ShowResult": return _U.update(model,{resultMessage: _p0._0});
+         default: return _U.update(model,{resultMessage: ""});}
+   });
+   var initialModel = {possibleWeapons: _U.list(["Rock","Paper","Scissors"]),players: _U.list([]),resultMessage: "",currentPlayer: ""};
+   var actions = $Signal.mergeMany(_U.list([$Mailbox.inbox.signal
+                                           ,A2($Signal.map,$Action.PlayersChanged,playersPort)
+                                           ,A2($Signal.map,$Action.DefineCurrentPlayer,currentPlayerPort)
+                                           ,A2($Signal.map,function (_p1) {    return $Action.ResetGame;},resetGamePort)
+                                           ,A2($Signal.map,$Action.ShowResult,resultFoundPort)]));
    var model = A3($Signal.foldp,update,initialModel,actions);
-   var main = A2($Signal.map,view(inbox.address),model);
-   return _elm.Jan.values = {_op: _op
-                            ,main: main
-                            ,inbox: inbox
-                            ,chooseWeaponMailbox: chooseWeaponMailbox
-                            ,newGameMailbox: newGameMailbox
-                            ,Model: Model
-                            ,Player: Player
-                            ,actions: actions
-                            ,model: model
-                            ,initialModel: initialModel
-                            ,weaponView: weaponView
-                            ,playerWeaponView: playerWeaponView
-                            ,playerView: playerView
-                            ,header: header
-                            ,invite: invite
-                            ,githubView: githubView
-                            ,weaponsList: weaponsList
-                            ,playersList: playersList
-                            ,resultView: resultView
-                            ,view: view
-                            ,NoOp: NoOp
-                            ,PlayersChanged: PlayersChanged
-                            ,ShowResult: ShowResult
-                            ,ResetGame: ResetGame
-                            ,DefineCurrentPlayer: DefineCurrentPlayer
-                            ,update: update};
+   var main = A2($Signal.map,$View.view($Mailbox.inbox.address),model);
+   return _elm.Jan.values = {_op: _op,main: main,actions: actions,model: model,initialModel: initialModel,update: update};
 };
