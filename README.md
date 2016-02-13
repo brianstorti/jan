@@ -27,5 +27,5 @@ $ mix test
 
 #### Looking at the code
 
-If you interested in the `Elm` part, you should take a look at [`Jan.elm`](/web/elm/Jan.elm) and [`socket.js`](/web/static/js/socket.js).
+If you interested in the `Elm` part, you should take a look at [`Jan.elm`](/web/elm/Jan.elm) and [`socket.js`](/web/static/js/socket.js).  
 For the `Elixir` code, probably the [`RoomChannel`](/web/channels/room_channel.ex) and the [`GameServer`](/lib/jan/game_server.ex) modules.
