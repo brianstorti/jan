@@ -13,7 +13,7 @@ defmodule Jan do
       supervisor(Jan.Repo, []),
       supervisor(Jan.GameSupervisor, []),
       worker(Jan.Registry, []),
-      worker(Jan.PlayWithStrangerWaitingList, []),
+      worker(Jan.PlayWithStrangerAgent, []),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

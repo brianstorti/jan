@@ -12,7 +12,7 @@ defmodule Jan.RoomController do
   end
 
   def play_with_stranger(conn, _params) do
-    random_room_id = Jan.PlayWithStrangerWaitingList.pop
+    random_room_id = Jan.PlayWithStrangerAgent.pop
     redirect conn, to: room_path(Endpoint, :show, random_room_id)
   end
 end
