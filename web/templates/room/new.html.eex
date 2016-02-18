@@ -1,5 +1,4 @@
-<div id="elm-main"></div>
-
 <div class="name">
   <input class="room-name" autofocus="autofocus" placeholder="Enter a room name" />
+  <a class="play-with-stranger button large expand">Or play with a stranger</a>
 </div>

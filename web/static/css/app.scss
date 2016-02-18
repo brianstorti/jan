@@ -29,6 +29,10 @@ $header-font-color: rgb(33,153,232);
   color: gray;
 }
 
+.play-with-stranger {
+  margin-top: 100px;
+}
+
 .error-message {
   font-size: 3vw;
   width: 100%;
@@ -38,8 +42,9 @@ $header-font-color: rgb(33,153,232);
 }
 
 .name {
+  text-align: center;
   position: absolute;
-  top: 35%;
+  top: 45%;
   transform: translateY(-50%);
   width: 100%;
 }

@@ -14,6 +14,7 @@ defmodule Jan.Router do
 
     get "/", RoomController, :new
     get "/rooms/:id", RoomController, :show
+    get "/play_with_stranger", RoomController, :play_with_stranger
     get "/admin", AdminController, :index
   end
 end

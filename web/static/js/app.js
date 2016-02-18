@@ -20,10 +20,16 @@ import "phoenix_html";
 
 import socket from "./socket";
 
-let roomName = document.getElementsByClassName('room-name')[0];
+let roomName = document.querySelector('.room-name');
+let playWithStrangerButton = document.querySelector('.play-with-stranger');
+
 roomName.addEventListener("keypress", e => {
   if (e.keyCode == 13) {
     let roomName = document.querySelector('.room-name').value;
     if(roomName) window.location = `/rooms/${roomName}`;
   }
+});
+
+playWithStrangerButton.addEventListener("click", e => {
+  window.location = `/play_with_stranger`;
 });
