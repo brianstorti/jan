@@ -8,13 +8,13 @@ defmodule Jan.GameSupervisor do
   end
 
 
-  def start_game do
-    Supervisor.start_child(@name, [])
+  def start_game(room_id) do
+    Supervisor.start_child(@name, [room_id])
   end
 
   def init(:ok) do
     children = [
-      worker(Jan.GameServer, [])
+      worker(Jan.GameServer, [], restart: :transient)
     ]
 
     supervise(children, strategy: :simple_one_for_one)

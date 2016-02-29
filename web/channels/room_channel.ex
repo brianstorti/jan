@@ -2,13 +2,13 @@ defmodule Jan.RoomChannel do
   use Phoenix.Channel
 
   def join("rooms:" <> room_id, %{"player_name" => player_name}, socket) do
-    pid = Jan.Registry.where_is(room_id)
+    Jan.GameSupervisor.start_game(room_id)
+
     socket = socket
-              |> assign(:pid, pid)
               |> assign(:player_name, player_name)
               |> assign(:room_id, room_id)
 
-    case Jan.GameServer.add_player(pid, player_name) do
+    case Jan.GameServer.add_player(room_id, player_name) do
       :ok ->
         send self, :players_changed
         {:ok, socket}
@@ -19,17 +19,16 @@ defmodule Jan.RoomChannel do
   end
 
   def handle_info(:players_changed, socket) do
-    players = Jan.GameServer.get_players_list(socket.assigns.pid)
-    broadcast! socket, "players_changed", %{players: Enum.reverse(players)}
+    broadcast_players_change(socket)
 
     {:noreply, socket}
   end
 
   def handle_in("choose_weapon", %{"weapon" => weapon}, socket) do
-    pid = socket.assigns.pid
+    room_id = socket.assigns.room_id
     player_name = socket.assigns.player_name
 
-    case Jan.GameServer.choose_weapon(pid, player_name, weapon) do
+    case Jan.GameServer.choose_weapon(room_id, player_name, weapon) do
       {:winner, player} ->
         broadcast! socket, "result_found", %{"message" => "#{player.name} won!"}
 
@@ -39,14 +38,14 @@ defmodule Jan.RoomChannel do
       _ -> nil
     end
 
-    send self, :players_changed
+    broadcast_players_change(socket)
 
     {:noreply, socket}
   end
 
   def handle_in("start_new_game", _, socket) do
-    Jan.GameServer.reset_game(socket.assigns.pid)
-    send self, :players_changed
+    Jan.GameServer.reset_game(socket.assigns.room_id)
+    broadcast_players_change(socket)
     broadcast!  socket, "reset_game", %{}
 
     {:noreply, socket}
@@ -58,20 +57,17 @@ defmodule Jan.RoomChannel do
   end
 
   def handle_in("leave", _, socket) do
-    pid = socket.assigns.pid
+    room_id = socket.assigns.room_id
     player_name = socket.assigns.player_name
 
-    Jan.GameServer.remove_player(pid, player_name)
-
-    case Jan.GameServer.get_players_list(pid) do
-      [] ->
-        Jan.Registry.unregister(socket.assigns.room_id)
-
-      _ ->
-        broadcast! socket, "players_changed", %{players: Jan.GameServer.get_players_list(pid)}
-    end
-
+    Jan.GameServer.remove_player(room_id, player_name)
+    broadcast_players_change(socket)
 
     {:stop, :normal, :ok, socket}
+  end
+
+  defp broadcast_players_change(socket) do
+    players = Jan.GameServer.get_players_list(socket.assigns.room_id)
+    broadcast! socket, "players_changed", %{players: Enum.reverse(players)}
   end
 end

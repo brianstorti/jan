@@ -7,8 +7,15 @@ defmodule Jan.GameServer do
 
   use GenServer
 
-  def start_link do
-    GenServer.start_link(__MODULE__, [])
+  def start_link(room_id) do
+    GenServer.start_link(__MODULE__,
+                         [],
+                         name: via_tuple(room_id))
+  end
+
+
+  defp via_tuple(room_id) do
+    {:via, Jan.Registry, {:game_server, room_id}}
   end
 
   @doc """
@@ -17,8 +24,8 @@ defmodule Jan.GameServer do
 
   Returns `:ok` or `{:error, message}`
   """
-  def add_player(pid, player_name) do
-    case GenServer.call(pid, {:add_player, player_name}) do
+  def add_player(room_id, player_name) do
+    case GenServer.call(via_tuple(room_id), {:add_player, player_name}) do
       :ok -> :ok
       :duplicate -> {:error, "There is already a '#{player_name}' in this room"}
       :empty -> {:error, "The name must be filled in"}
@@ -26,8 +33,8 @@ defmodule Jan.GameServer do
     end
   end
 
-  def remove_player(pid, player_name) do
-    GenServer.cast(pid, {:remove_player, player_name})
+  def remove_player(room_id, player_name) do
+    GenServer.cast(via_tuple(room_id), {:remove_player, player_name})
   end
 
   @doc """
@@ -35,10 +42,10 @@ defmodule Jan.GameServer do
   If all the users have played already, it will try to find the winner,
   and can return `{:winner, player_name}` or simply `:draw`.
   """
-  def choose_weapon(pid, player_name, weapon) do
-    case GenServer.call(pid, {:choose_weapon, player_name, weapon}) do
+  def choose_weapon(room_id, player_name, weapon) do
+    case GenServer.call(via_tuple(room_id), {:choose_weapon, player_name, weapon}) do
       {:winner, winner} ->
-        GenServer.cast(pid, {:increment_winner_score, winner})
+        GenServer.cast(via_tuple(room_id), {:increment_winner_score, winner})
         {:winner, winner}
       other_result -> other_result
     end
@@ -47,16 +54,16 @@ defmodule Jan.GameServer do
   @doc """
   Resets the game by settings all the users' weapons to empty String.
   """
-  def reset_game(pid) do
-    GenServer.cast(pid, :reset_game)
+  def reset_game(room_id) do
+    GenServer.cast(via_tuple(room_id), :reset_game)
   end
 
   @doc """
   Returns the list of all the players that are in this game, with their
   score and weapon.
   """
-  def get_players_list(pid) do
-    GenServer.call(pid, :players_list)
+  def get_players_list(room_id) do
+    GenServer.call(via_tuple(room_id), :players_list)
   end
 
   ## SERVER
@@ -66,7 +73,13 @@ defmodule Jan.GameServer do
   end
 
   def handle_cast({:remove_player, player_name}, state) do
-    {:noreply, Enum.filter(state, &(&1.name != player_name))}
+    new_state = Enum.filter(state, &(&1.name != player_name))
+
+    if Enum.empty?(new_state) do
+      {:stop, :normal, new_state}
+    else
+      {:noreply, new_state}
+    end
   end
 
   def handle_cast(:reset_game, state) do

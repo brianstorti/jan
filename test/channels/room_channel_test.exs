@@ -4,7 +4,7 @@ defmodule Jan.RoomChannelTest do
   alias Jan.RoomChannel
 
   setup do
-    Jan.Registry.unregister("foo")
+    Jan.Registry.unregister_name({:game_server, "foo"})
 
     {:ok, _, socket} = subscribe_and_join(socket, RoomChannel, "rooms:foo", %{"player_name" => "Brian"})
     {:ok, socket: socket}
