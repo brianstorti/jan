@@ -4,7 +4,7 @@ defmodule Jan.GameServerTest do
   alias Jan.GameServer
 
   test "adds and removes players" do
-    {:ok, pid} = GameServer.start_link("room_id")
+    {:ok, _pid} = GameServer.start_link("room_id")
     assert Enum.empty?(GameServer.get_players_list("room_id"))
 
     GameServer.add_player("room_id", "Brian")
