@@ -19,9 +19,10 @@ let init = function() {
   let roomName = document.querySelector('.room-name').value;
   let playerName = document.querySelector('.player-name').value;
   let channel = socket.channel("rooms:" + roomName, { player_name: playerName });
+  let elmApp = Elm.Jan.fullscreen();
 
   channel.join().receive("error", handleFailedJoin)
-                .receive("ok", response => { handleSuccessfulJoin(response, channel, playerName); });
+                .receive("ok", response => { handleSuccessfulJoin(response, channel, playerName, elmApp); });
 
   window.onbeforeunload = function () {
     leave(channel);
@@ -29,16 +30,11 @@ let init = function() {
 
 };
 
-let handleSuccessfulJoin = function(response, channel, playerName) {
-  let elmApp = Elm.fullscreen(Elm.Jan, { playersPort: [],
-                                         resultFoundPort: "",
-                                         currentPlayerPort: "",
-                                         resetGamePort: []});
-
-  elmApp.ports.currentPlayerPort.send(playerName);
-
+let handleSuccessfulJoin = function(response, channel, playerName, elmApp) {
   document.querySelector('.game').style.display = 'block';
   document.querySelector('.name').style.display = 'none';
+
+  elmApp.ports.currentPlayerPort.send(playerName);
 
   elmApp.ports.chooseWeaponPort.subscribe(function (weapon) {
     channel.push("choose_weapon", { weapon: weapon});
@@ -57,7 +53,7 @@ let handleSuccessfulJoin = function(response, channel, playerName) {
   });
 
   channel.on("reset_game", payload => {
-    elmApp.ports.resetGamePort.send([]);
+    elmApp.ports.resetGamePort.send("");
   });
 };
 
