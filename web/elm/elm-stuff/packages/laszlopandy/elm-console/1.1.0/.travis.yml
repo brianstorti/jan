@@ -1,7 +1,0 @@
-sudo: false
-language: none
-install:
-  - npm install --global elm@2.0.0
-
-script:
-  - ./test/run-tests.sh
