@@ -43,9 +43,8 @@ exports.config = {
       "test/static",
       "web/elm/Jan.elm",
       "web/elm/View.elm",
-      "web/elm/Action.elm",
-      "web/elm/Model.elm",
-      "web/elm/Mailbox.elm",
+      "web/elm/Msg.elm",
+      "web/elm/Model.elm"
     ],
 
     // Where to compile files to

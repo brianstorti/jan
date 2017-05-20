@@ -1,18 +1,16 @@
-module View where
+module View exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import String exposing (..)
-import Signal exposing (Address)
 
 import Model exposing (..)
-import Action exposing (..)
-import Mailbox exposing (..)
+import Msg exposing (..)
 
 
-weaponView : Address Action -> Model -> String -> Html
-weaponView address model weapon =
+weaponView : Model -> String -> Html Msg
+weaponView model weapon =
   let
     iconClassName = "fa-hand-" ++ String.toLower(weapon) ++ "-o"
     shouldDisable = (not << String.isEmpty <| model.resultMessage) || List.length(model.players) < 2
@@ -21,7 +19,7 @@ weaponView address model weapon =
     div
       [ class "medium-4 columns" ]
       [ a
-          [ class ("weapon-wrapper " ++ disabledClass), onClick chooseWeaponMailbox.address (String.toLower weapon)]
+          [ class ("weapon-wrapper " ++ disabledClass), onClick (ChooseWeapon (String.toLower weapon))]
           [
             i [ class ("weapon fa fa-5x " ++ iconClassName) ] [],
             p [ class "weapon-label" ] [ text weapon ]
@@ -29,8 +27,8 @@ weaponView address model weapon =
       ]
 
 
-playerWeaponView : Address Action -> Player -> Model -> Html
-playerWeaponView address player model =
+playerWeaponView : Player -> Model -> Html Msg
+playerWeaponView player model =
   let
       gameNotFinished = String.isEmpty(model.resultMessage)
       noWeaponSelected = String.isEmpty(player.weapon)
@@ -54,17 +52,17 @@ playerWeaponView address player model =
 
 
 
-playerView : Address Action -> Model -> Player -> Html
-playerView address model player =
+playerView : Model -> Player -> Html Msg
+playerView model player =
   div
     [ class "medium-4 columns" ]
     [
       span [ class "label"] [ text ("Score: " ++ (toString player.score)) ],
-      div [] [ playerWeaponView address player model ]
+      div [] [ playerWeaponView player model ]
     ]
 
 
-header : Model -> Html
+header : Model -> Html Msg
 header model =
   let
     headerText = if List.length(model.players) > 1 then
@@ -87,22 +85,22 @@ githubView =
       ]
 
 
-weaponsList : Address Action -> Model -> Html
-weaponsList address model =
+weaponsList : Model -> Html Msg
+weaponsList model =
   div
     [ class "row weapons" ]
-    (List.map (weaponView address model) model.possibleWeapons)
+    (List.map (weaponView model) model.possibleWeapons)
 
 
-playersList : Address Action -> Model -> Html
-playersList address model =
+playersList : Model -> Html Msg
+playersList model =
   div
     [ class "row players" ]
-    (List.map (playerView address model) model.players)
+    (List.map (playerView model) model.players)
 
 
-resultView : Address Action -> Model -> Html
-resultView address model =
+resultView : Model -> Html Msg
+resultView model =
   if String.isEmpty(model.resultMessage) then
      div [] []
   else
@@ -111,20 +109,20 @@ resultView address model =
           h1 [ class "result" ]
              [ text model.resultMessage ],
 
-          a [ class "button", onClick newGameMailbox.address () ]
+          a [ class "button", onClick StartNewGame ]
             [ text "New Game" ]
         ]
 
 
-view : Address Action -> Model -> Html
-view address model =
+view : Model -> Html Msg
+view model =
   div
     [ class "row game" ]
     [
       invite,
       githubView,
       header model,
-      weaponsList address model,
-      playersList address model,
-      resultView address model
+      weaponsList model,
+      playersList model,
+      resultView model
     ]

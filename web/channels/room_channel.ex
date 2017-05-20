@@ -46,7 +46,7 @@ defmodule Jan.RoomChannel do
   def handle_in("start_new_game", _, socket) do
     Jan.GameServer.reset_game(socket.assigns.room_id)
     broadcast_players_change(socket)
-    broadcast!  socket, "reset_game", %{}
+    broadcast! socket, "reset_game", %{}
 
     {:noreply, socket}
   end
