@@ -2,7 +2,7 @@
 
 A [rock paper scissors](https://en.wikipedia.org/wiki/Rock-paper-scissors) game written in [`Elixir`](http://elixir-lang.org/) and [`Elm`](http://elm-lang.org).
 
-###[Try it](https://jkp.herokuapp.com).
+### [Try it](https://jkp.herokuapp.com).
 
 ![demo](/docs/demo.gif)
 
